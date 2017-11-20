@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+	<head>
+		<title>YSI Estimator</title>
+		<link rel="stylesheet" media="screen" href = "{{ url_for('static',filename='css/bootstrap.min.css') }}">
+		<link rel="stylesheet" href = "{{ url_for('static',filename='css/bootstrap-theme.min.css') }}">
+		<!-- <link rel="stylesheet" href = "{{ url_for('static',filename='css/custom.css') }}"> -->
+		<script>
+			document.write('<link href="{{ url_for('static',filename='css/custom.css') }}?r='+ Math.floor(Math.random()*100) +'" rel="stylesheet" type="text/css" />');
+		</script>
+		<meta name="viewport" content = "width=device-width, initial-scale=1.0">
+	</head>
+	<body>
+
+
+		<div class="container">
+
+
+			<h2>Online YSI Estimator</h2>
+			<form  action="/result" method="get" role="form">
+				{{ form.csrf }}
+				<div class="form-group">
+					<input type="text" class="form-control" id="name" name="name" placeholder="Enter a SMILES string, e.g. 'CC1=CC(=CC(=C1)O)C'">
+				</div>
+				<button type="submit" class="btn btn-success">Submit</button>
+			</form>
+
+			<br>
+			{% with messages = get_flashed_messages(with_categories=true) %}
+			{% if messages %}
+
+			{% for message in messages %}
+			{% if "Error" not in message[1]: %}
+			<div class="alert alert-info">
+				<strong>Success! </strong> {{ message[1] }}
+			</div>
+			{% endif %}
+
+			{% if "Error" in message[1]: %}
+			<div class="alert alert-warning">
+				{{ message[1] }}
+			</div>
+			{% endif %}
+			{% endfor %}
+			{% endif %}
+			{% endwith %}
+
+
+		</div>
+		<br>            
+
+		<div id="content" class="container">{% block content %}{% endblock %}</div>
+
+		<footer class="footer">
+			<div class='container'>
+				<p>
+				<em>Author:</em> Peter St. John<br/>
+				<em>Email:</em> peter.stjohn@nrel.gov
+				</p>
+			</div>
+		</footer>
+
+	</body>
+</html>

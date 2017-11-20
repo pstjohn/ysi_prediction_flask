@@ -1,0 +1,54 @@
+body {
+  font-size: 16px;
+  }
+
+.fragment.media:first-child {
+  margin-top: 15px;
+  }
+
+#drawing > svg {
+  overflow: visible;
+  margin: auto;
+  display: block;
+  }
+
+#drawing {
+  padding: 10px;
+  }
+
+#ysi_reg p {
+  text-align: center;
+  font-size: 20px;
+  }
+
+#ysi_reg p span.label {
+  font-size: 100%;
+  }
+
+
+@media (min-width: 1200px) {
+  .container {
+    max-width: 970px;
+  }}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 100px;
+  }
+
+.footer {
+  font-color: 	#A9A9A9;
+  position: absolute;
+  bottom: 0;
+  /* Set the fixed height of the footer here */
+  width: 100%;
+  background-color: #f5f5f5;
+}
+
+.footer p {
+  margin: 10px;
+  }
