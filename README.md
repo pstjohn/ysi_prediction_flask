@@ -6,3 +6,10 @@ The only tricky dependency here is [`rdkit`](http://www.rdkit.org/docs/Install.h
 conda install -c rdkit rdkit
 ```
 
+
+The dependencies are therefore
+* rdkit
+* pandas
+* seaborn (for colors)
+* flask
+* wtforms
