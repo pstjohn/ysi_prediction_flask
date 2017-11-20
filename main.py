@@ -26,6 +26,10 @@ def result():
     smiles = request.args['name']
 
     try:
+        # Here's the real prediction step. We calculated the predicted mean +/-
+        # std, draw the whole molecule, and return a dataframe of the component
+        # fragments.
+
         mean, std, outlier, frag_df = predict(smiles)
         svg = Markup(draw_mol_svg(smiles, figsize=(150, 150),
                                   color_dict=dict(zip(frag_df.index, frag_df.color))))
@@ -33,14 +37,19 @@ def result():
         mean = round(mean, 1)
         std = round(std, 1)
 
+        return render_template(
+            "result.html", form=form, smiles=smiles, mol_svg=svg, mean=mean,
+            std=std, frag_df=frag_df[frag_df['train_count'] > 0], 
+            outlier=outlier, 
+            frag_missing_df=frag_df[frag_df['train_count'] == 0])
+
     except Exception:
-        flash('Error: "{}" SMILES string invalid. Please enter a valid SMILES without quotes.'.format(smiles))
+        # Most likely a poorly-formed SMILES string.
+
+        flash('Error: "{}" SMILES string invalid. Please enter a valid SMILES '
+              'without quotes.'.format(smiles))
         return render_template('index.html', form=form)
 
-    return render_template(
-        "result.html", form=form, smiles=smiles, mol_svg=svg, mean=mean,
-        std=std, frag_df=frag_df[frag_df['train_count'] > 0], 
-        outlier=outlier, frag_missing_df=frag_df[frag_df['train_count'] == 0])
 
 
 
