@@ -4,12 +4,8 @@ import re
 import pandas as pd
 
 from rdkit import Chem
-from IPython.display import SVG
-
 from rdkit.Chem import rdDepictor
 from rdkit.Chem.Draw import rdMolDraw2D
-
-from fragdecomp.chemical_conversions import canonicalize_smiles
 
 def get_fragments(smiles):
     """Return a pandas series indicating the carbon types in the given SMILES
@@ -19,7 +15,7 @@ def get_fragments(smiles):
         A representation of the desired molecule. I.e, 'CCCC'
 
     """
-    mol = Chem.MolFromSmiles(canonicalize_smiles(smiles, isomeric=False))
+    mol = Chem.MolFromSmiles(smiles)
     mol = Chem.AddHs(mol)  # This seems important to get just the next C
     return pd.Series(Counter((
                 get_environment_smarts(carbon, mol)
@@ -148,8 +144,8 @@ def draw_mol_svg(mol_str, color_dict=None, figsize=(300, 300), smiles=True):
     drawer.FinishDrawing()
     svg = drawer.GetDrawingText()
 
-    svg = SVG(svg.replace('svg:', '').replace(':svg', ''))
-    return svg.data
+    svg = svg.replace('svg:', '').replace(':svg', '')
+    return svg
 
 
 def flatten(l, ltypes=(list, tuple)):

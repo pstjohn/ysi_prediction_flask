@@ -3,7 +3,7 @@ import pandas as pd
 import seaborn as sns
 from flask import Markup
 
-from .fragment_decomposition import get_fragments, draw_fragment
+from frag_prediction.fragment_decomposition import get_fragments, draw_fragment
 
 currdir = os.path.dirname(os.path.abspath(__file__))
 
