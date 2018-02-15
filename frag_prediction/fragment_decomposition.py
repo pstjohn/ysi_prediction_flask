@@ -173,7 +173,7 @@ def draw_fragment(fragment_name, color):
     drawer = rdMolDraw2D.MolDraw2DSVG(80, 80)
 
     center = int(pd.Series({atom.GetIdx(): len(atom.GetNeighbors()) for atom in
-                            mol.GetAtoms()}).argmax())
+                            mol.GetAtoms()}).idxmax())
     
     to_highlight = [center]
     radius_dict = {center: 0.5}
