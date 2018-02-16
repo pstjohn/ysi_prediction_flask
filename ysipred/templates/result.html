@@ -5,6 +5,17 @@
 
 <div id='drawing'>{{ mol_svg }}</div>
 
+{% if exp_mean %}
+<div id='ysi_reg'>
+	<div class="alert alert-success">
+	<p>
+	Measured YSI: 
+	<em>{{ exp_mean }} &plusmn; {{ exp_std }} </em>
+	</p>
+</div>
+</div>
+{% endif %}
+
 <div id='ysi_reg'>
 	<p>
 	Estimated YSI: 
@@ -23,7 +34,7 @@
 <div class='container'>
 <div id='frags' class="row">
 	{% for key,value in frag_missing_df.iterrows() %}
-	<div class="col-sm-6 col-md-4 media fragment border-1 rounded">
+	<div class="col-sm-6 col-md-6 media fragment border-1 rounded">
 		<div class='media-left'>{{ value['svg'] }}</div>
 		<div class="media-body">
 			<h4 class='media-heading'>{{ key }}</h4>
@@ -41,7 +52,7 @@
 <div class='container'>
 <div id='frags' class="row">
 	{% for key,value in frag_df.iterrows() %}
-	<div class="col-sm-6 col-md-4 media fragment border-1 rounded">
+	<div class="col-sm-6 col-md-6 media fragment border-1 rounded">
 		<div class='media-left'>{{ value['svg'] }}</div>
 		<div class="media-body">
 			<h4 class='media-heading'>{{ key }}</h4>

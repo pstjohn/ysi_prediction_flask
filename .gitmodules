@@ -1,0 +1,6 @@
+[submodule "ysipred/YSIs_for_prediction"]
+	path = ysipred/YSIs_for_prediction
+	url = https://github.com/m-j-montgomery/YSIs_for_prediction.git
+[submodule "ysipred/fragdecomp"]
+	path = ysipred/fragdecomp
+	url = https://github.com/pstjohn/fragdecomp.git

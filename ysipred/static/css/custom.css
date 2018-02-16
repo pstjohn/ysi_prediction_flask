@@ -6,6 +6,10 @@ body {
   margin-top: 15px;
   }
 
+#frags svg {
+  overflow: visible;
+  }
+
 #drawing > svg {
   overflow: visible;
   margin: auto;
