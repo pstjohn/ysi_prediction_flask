@@ -9,6 +9,7 @@ app.config['SECRET_KEY'] = '7d441f27d441f27567d441f2b6176a'
 
 from prediction import predict
 from fragdecomp.fragment_decomposition import draw_mol_svg, FragmentError
+from fragdecomp.chemical_conversions import canonicalize_smiles
 
 class ReusableForm(Form):
     name = TextField('SMILES:', validators=[validators.required()])
@@ -24,14 +25,15 @@ def index():
 def result():
     form = ReusableForm(request.form)
     smiles = request.args['name']
+    can_smiles = canonicalize_smiles(smiles)
 
     try:
         # Here's the real prediction step. We calculated the predicted mean +/-
         # std, draw the whole molecule, and return a dataframe of the component
         # fragments.
 
-        mean, std, outlier, frag_df, exp_mean, exp_std = predict(smiles)
-        svg = Markup(draw_mol_svg(smiles, figsize=(150, 150),
+        mean, std, outlier, frag_df, exp_mean, exp_std = predict(can_smiles)
+        svg = Markup(draw_mol_svg(can_smiles, figsize=(150, 150),
                                   color_dict=dict(zip(frag_df.index, frag_df.color))))
 
         mean = round(mean, 1)

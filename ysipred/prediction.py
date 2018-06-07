@@ -79,3 +79,48 @@ def predict(smiles):
     frag_df = frag_df.join(beta, how='left').fillna(0)
 
     return mean[0], std[0], isoutlier, frag_df, exp_mean, exp_std
+
+
+def predict_apply(smiles):
+    """ function optimized for pandas series of SMILES strings """
+
+    try:
+        fragments = get_fragments(smiles)
+    except Exception:
+        raise FragmentError
+
+    isoutlier = False
+
+    # See if an experimental value exists
+    try:
+        ysi_exp = ysi.loc[canonicalize_smiles(smiles)]
+        exp_mean = ysi_exp.YSI
+        exp_std = ysi_exp.YSI_err
+
+    except KeyError:
+        exp_mean = None
+        exp_std = None
+
+    # Make sure all the fragments are found in the database
+    if not fragments.index.isin(frags.columns).all():
+        isoutlier = True
+
+    # Put the fragments in the correct order
+    reindexed_frags = fragments.reindex(frags.columns).fillna(0).astype(int)
+    
+    # Make sure the fragments are not present in nonlinear combinations of database
+    if nullspace.predict(reindexed_frags):
+        isoutlier = True
+
+    # Predict based off previous regression
+    mean, std = bridge.predict(reindexed_frags.values.reshape(1, -1),
+                               return_std=True)
+
+    prediction_type = 'prediction' if not isoutlier else 'outlier'
+    if exp_mean:
+        prediction_type = 'experiment'
+
+    return pd.Series({
+        'YSI': exp_mean if exp_mean else mean[0],
+        'YSI_err': exp_std if exp_mean else std[0],
+        'pred_type': prediction_type}, name=smiles)
