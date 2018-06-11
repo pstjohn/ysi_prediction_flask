@@ -2,7 +2,8 @@ FROM continuumio/miniconda3
 
 COPY ysipred/environment.yml /tmp/environment.yml
 WORKDIR /tmp
-RUN conda env update -f environment.yml
+RUN apt-get install -y libxrender-dev && \
+    conda env update -f environment.yml
 
 RUN mkdir -p /deploy/app
 COPY ysipred /deploy/app
