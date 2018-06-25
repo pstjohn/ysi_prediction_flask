@@ -3,12 +3,13 @@ import pandas as pd
 import numpy as np
 from flask import Markup
 
-from colors import husl_palette
 from fragdecomp.fragment_decomposition import get_fragments, draw_fragment, FragmentError
 from fragdecomp.nullspace_outlier import NullspaceClassifier
 from fragdecomp.chemical_conversions import canonicalize_smiles
 from sklearn.linear_model import BayesianRidge
 from sklearn.linear_model.base import _rescale_data
+
+from ysipred.colors import husl_palette
 
 
 currdir = os.path.dirname(os.path.abspath(__file__))
