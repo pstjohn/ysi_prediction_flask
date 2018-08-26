@@ -2,20 +2,33 @@ import os
 import pandas as pd
 import numpy as np
 from flask import Markup
+import cgi
 
-from fragdecomp.fragment_decomposition import get_fragments, draw_fragment, FragmentError
+from fragdecomp.fragment_decomposition import (get_fragments, draw_fragment,
+                                               FragmentError, draw_mol_svg)
 from fragdecomp.nullspace_outlier import NullspaceClassifier
 from fragdecomp.chemical_conversions import canonicalize_smiles
 from sklearn.linear_model import BayesianRidge
 from sklearn.linear_model.base import _rescale_data
 
-from ysipred.colors import husl_palette
+from colors import husl_palette
 
 
 currdir = os.path.dirname(os.path.abspath(__file__))
 
 # Load YSI data
 ysi = pd.read_csv(currdir + '/YSIs_for_prediction/ysi.csv')
+
+ysi = pd.concat([
+    pd.read_csv(currdir + '/YSIs_for_prediction/20180703_new_nitrogenated_compounds.csv'),
+    pd.read_csv(currdir + '/YSIs_for_prediction/20180720_acetyl_ysis.csv'),
+    pd.read_csv(currdir + '/YSIs_for_prediction/ysi.csv'),
+], sort=False).reset_index(drop=True)
+
+ysi = ysi.drop_duplicates(subset='SMILES', keep='first')
+
+# we use this for weighting, so provide a 5% relative error if none given
+ysi.YSI_err = ysi.YSI_err.fillna(np.abs(ysi.YSI * 0.05))
 
 # Parse ysi fragments
 frags = ysi.SMILES.apply(get_fragments).fillna(0).astype(int)
@@ -49,8 +62,8 @@ def predict(smiles):
     # See if an experimental value exists
     try:
         ysi_exp = ysi.loc[canonicalize_smiles(smiles)]
-        exp_mean = ysi_exp.YSI
-        exp_std = ysi_exp.YSI_err
+        exp_mean = round(ysi_exp.YSI, 1)
+        exp_std = round(ysi_exp.YSI_err, 1)
 
     except KeyError:
         exp_mean = None
@@ -80,6 +93,23 @@ def predict(smiles):
     frag_df = frag_df.join(beta, how='left').fillna(0)
 
     return mean[0], std[0], isoutlier, frag_df, exp_mean, exp_std
+
+
+def return_fragment_matches(frag_str):
+    """ return a database of molecules matching the input fragment """
+
+    matches = ysi[(frags[frag_str] != 0).values].reset_index()
+    color = (0.9677975592919913, 0.44127456009157356, 0.5358103155058701)
+
+    if len(matches) > 20:
+        matches = matches.sample(20)
+
+    matches['svg'] = matches.SMILES.apply(lambda x: Markup(draw_mol_svg(
+        x, figsize=(80, 80), color_dict={frag_str: color})))
+
+    matches['smiles_link'] = matches.SMILES.apply(cgi.escape)
+
+    return beta.loc[frag_str], matches.round(1)
 
 
 def predict_apply(smiles):
@@ -125,3 +155,4 @@ def predict_apply(smiles):
         'YSI': exp_mean if exp_mean else mean[0],
         'YSI_err': exp_std if exp_mean else std[0],
         'pred_type': prediction_type}, name=smiles)
+

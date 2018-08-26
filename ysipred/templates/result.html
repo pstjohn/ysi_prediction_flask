@@ -58,7 +58,7 @@
 			<h4 class='media-heading'>{{ key }}</h4>
 			<p><strong>Count:</strong> {{ value['count'] }}<br/>
 			<strong>YSI:</strong> {{ value['mean'] }} &plusmn; {{ value['std'] }}<br/>
-			<strong>Training #:</strong> {{ value['train_count'] }}<br/>
+			<strong>Training #:</strong> <a href='frag?name={{ value['frag_link'] }}'>{{ value['train_count'] }}</a><br/>
 		</div>
 	</div>
 	{% endfor %}

@@ -1,0 +1,33 @@
+{% extends "index.html" %}
+
+{% block content %}
+<h2>{{ frag_str }}</h2>
+
+<div id='drawing'>{{ frag_svg }}</div>
+
+<div id='ysi_reg'>
+	<p>
+	Regressed YSI: 
+	<em>{{ fragrow['mean'] }} &plusmn; {{ fragrow['std'] }} </em>
+	</p>
+</div>
+
+<h3>Containing Molecules</h3>
+
+<div class='container'>
+<div id='frags' class="row">
+	{% for key,value in matches.iterrows() %}
+	<div class="col-sm-6 col-md-6 media fragment border-1 rounded">
+		<div class='media-left'>{{ value['svg'] }}</div>
+		<div class="media-body">
+			<h4 class='media-heading'>{{ value['Species'] }}</h4>
+			<p><strong>SMILES:</strong> <a href="result?name={{ value['smiles_link'] }}">{{ value['SMILES'] }}</a><br/>
+			<strong>YSI:</strong> {{ value['YSI'] }} &plusmn; {{ value['YSI_err'] }}<br/>
+		</div>
+	</div>
+	{% endfor %}
+</div>
+</div>
+
+{% endblock %}
+
