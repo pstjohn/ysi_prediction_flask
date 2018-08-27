@@ -26,6 +26,10 @@ gunicorn --bind 0.0.0.0:2222 main:app
 Then browse to 0.0.0.0:2222 in a web browser
 
 
+## To deploy new changes to website
 
-
-
+```
+heroku container:login
+heroku container:push web --app ysipred
+heroku container:release web --app ysipred
+```
