@@ -36,7 +36,7 @@ def result():
         # std, draw the whole molecule, and return a dataframe of the component
         # fragments.
 
-        mean, std, outlier, frag_df, exp_mean, exp_std = predict(can_smiles)
+        mean, std, outlier, frag_df, exp_mean, exp_std, exp_name = predict(can_smiles)
         svg = Markup(draw_mol_svg(can_smiles, figsize=(150, 150),
                                   color_dict=dict(zip(frag_df.index, frag_df.color))))
 
@@ -45,6 +45,9 @@ def result():
 
         frag_df['frag_link'] = frag_df.index
         frag_df['frag_link'] = frag_df['frag_link'].apply(quote)
+
+        if exp_name:
+            smiles += ' ({})'.format(exp_name)
 
         return render_template(
             "result.html", form=form, smiles=smiles, mol_svg=svg, mean=mean,

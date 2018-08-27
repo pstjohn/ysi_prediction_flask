@@ -2,7 +2,6 @@ import os
 import pandas as pd
 import numpy as np
 from flask import Markup
-import cgi
 
 from fragdecomp.fragment_decomposition import (get_fragments, draw_fragment,
                                                FragmentError, draw_mol_svg)
@@ -64,10 +63,12 @@ def predict(smiles):
         ysi_exp = ysi.loc[canonicalize_smiles(smiles)]
         exp_mean = round(ysi_exp.YSI, 1)
         exp_std = round(ysi_exp.YSI_err, 1)
+        exp_name = ysi_exp.Species
 
     except KeyError:
         exp_mean = None
         exp_std = None
+        exp_name = None
 
     # Make sure all the fragments are found in the database
     if not fragments.index.isin(frags.columns).all():
@@ -92,7 +93,7 @@ def predict(smiles):
         lambda x: Markup(draw_fragment(x.name, x.color)), 1)
     frag_df = frag_df.join(beta, how='left').fillna(0)
 
-    return mean[0], std[0], isoutlier, frag_df, exp_mean, exp_std
+    return mean[0], std[0], isoutlier, frag_df, exp_mean, exp_std, exp_name
 
 
 def return_fragment_matches(frag_str):
@@ -106,8 +107,6 @@ def return_fragment_matches(frag_str):
 
     matches['svg'] = matches.SMILES.apply(lambda x: Markup(draw_mol_svg(
         x, figsize=(80, 80), color_dict={frag_str: color})))
-
-    matches['smiles_link'] = matches.SMILES.apply(cgi.escape)
 
     return beta.loc[frag_str], matches.round(1)
 
