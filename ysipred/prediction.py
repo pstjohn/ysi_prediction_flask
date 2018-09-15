@@ -1,7 +1,6 @@
 import os
 import pandas as pd
 import numpy as np
-from flask import Markup
 
 from fragdecomp.fragment_decomposition import (get_fragments, draw_fragment,
                                                FragmentError, draw_mol_svg)
@@ -11,6 +10,12 @@ from sklearn.linear_model import BayesianRidge
 from sklearn.linear_model.base import _rescale_data
 
 from colors import husl_palette
+
+try:
+    from flask import Markup
+    flask = True
+except ImportError:
+    flask = False
 
 
 currdir = os.path.dirname(os.path.abspath(__file__))
@@ -89,8 +94,9 @@ def predict(smiles):
     colors = husl_palette(n_colors=len(fragments))
     frag_df = pd.DataFrame(fragments, columns=['count'])
     frag_df['color'] = colors
-    frag_df['svg'] = frag_df.apply(
-        lambda x: Markup(draw_fragment(x.name, x.color)), 1)
+    if flask:
+        frag_df['svg'] = frag_df.apply(
+            lambda x: Markup(draw_fragment(x.name, x.color)), 1)
     frag_df = frag_df.join(beta, how='left').fillna(0)
 
     return mean[0], std[0], isoutlier, frag_df, exp_mean, exp_std, exp_name
