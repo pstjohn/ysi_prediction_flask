@@ -9,7 +9,7 @@ from fragdecomp.chemical_conversions import canonicalize_smiles
 from sklearn.linear_model import BayesianRidge
 from sklearn.linear_model.base import _rescale_data
 
-from colors import husl_palette
+from ysipred.colors import husl_palette
 
 try:
     from flask import Markup

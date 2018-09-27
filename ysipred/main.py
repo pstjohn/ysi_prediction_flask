@@ -9,7 +9,7 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 app.config['SECRET_KEY'] = '7d441f27d441f27567d441f2b6176a'
 
-from prediction import predict, return_fragment_matches
+from ysipred.prediction import predict, return_fragment_matches
 from fragdecomp.fragment_decomposition import draw_mol_svg, FragmentError, draw_fragment
 from fragdecomp.chemical_conversions import canonicalize_smiles
 

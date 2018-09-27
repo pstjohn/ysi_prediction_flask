@@ -1,5 +1,5 @@
 import numpy as np
-import husl
+import ysipred.husl
 
 def husl_palette(n_colors=6, h=.01, s=.9, l=.65):
     """Get a set of evenly spaced colors in HUSL hue space.
