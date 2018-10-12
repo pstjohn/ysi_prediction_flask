@@ -21,9 +21,8 @@ except ImportError:
 currdir = os.path.dirname(os.path.abspath(__file__))
 
 # Load YSI data
-ysi = pd.read_csv(currdir + '/YSIs_for_prediction/ysi.csv')
-
 ysi = pd.concat([
+    pd.read_csv(currdir + '/YSIs_for_prediction/20180825_oxygenated_aromatics.csv'),
     pd.read_csv(currdir + '/YSIs_for_prediction/20180703_new_nitrogenated_compounds.csv'),
     pd.read_csv(currdir + '/YSIs_for_prediction/20180720_acetyl_ysis.csv'),
     pd.read_csv(currdir + '/YSIs_for_prediction/ysi.csv'),
