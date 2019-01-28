@@ -7,7 +7,6 @@ from fragdecomp.fragment_decomposition import (get_fragments, draw_fragment,
 from fragdecomp.nullspace_outlier import NullspaceClassifier
 from fragdecomp.chemical_conversions import canonicalize_smiles
 from sklearn.linear_model import BayesianRidge
-from sklearn.linear_model.base import _rescale_data
 
 from colors import husl_palette
 
@@ -22,6 +21,7 @@ currdir = os.path.dirname(os.path.abspath(__file__))
 
 # Load YSI data
 ysi = pd.concat([
+    pd.read_csv(currdir + '/YSIs_for_prediction/20190128_furanics.csv'),
     pd.read_csv(currdir + '/YSIs_for_prediction/20180825_oxygenated_aromatics.csv'),
     pd.read_csv(currdir + '/YSIs_for_prediction/20180703_new_nitrogenated_compounds.csv'),
     pd.read_csv(currdir + '/YSIs_for_prediction/20180720_acetyl_ysis.csv'),
@@ -42,8 +42,7 @@ nullspace.fit(frags)
 
 bridge = BayesianRidge()
 
-X, y = _rescale_data(frags, ysi.YSI, 1/ysi.YSI_err)  # Until sklearn 0.20
-bridge.fit(X, y)
+bridge.fit(frags, ysi.YSI, sample_weight=1/ysi.YSI_err)
 
 frag_means, frag_stds = bridge.predict(np.eye(frags.shape[1]), return_std=True)
 beta = pd.DataFrame(np.vstack([frag_means, frag_stds]).T,
