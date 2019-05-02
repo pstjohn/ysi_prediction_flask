@@ -8,7 +8,11 @@ from fragdecomp.nullspace_outlier import NullspaceClassifier
 from fragdecomp.chemical_conversions import canonicalize_smiles
 from sklearn.linear_model import BayesianRidge
 
-from colors import husl_palette
+try:
+    from colors import husl_palette
+except ImportError:
+    pass
+
 
 try:
     from flask import Markup
@@ -21,6 +25,7 @@ currdir = os.path.dirname(os.path.abspath(__file__))
 
 # Load YSI data
 ysi = pd.concat([
+    pd.read_csv(currdir + '/YSIs_for_prediction/20190502_peters_compounds.csv'),
     pd.read_csv(currdir + '/YSIs_for_prediction/20190128_furanics.csv'),
     pd.read_csv(currdir + '/YSIs_for_prediction/20180825_oxygenated_aromatics.csv'),
     pd.read_csv(currdir + '/YSIs_for_prediction/20180703_new_nitrogenated_compounds.csv'),
