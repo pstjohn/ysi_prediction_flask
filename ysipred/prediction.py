@@ -45,7 +45,7 @@ frags = ysi.SMILES.apply(get_fragments).fillna(0).astype(int)
 nullspace = NullspaceClassifier()
 nullspace.fit(frags)
 
-bridge = BayesianRidge()
+bridge = BayesianRidge(fit_intercept=False)
 
 bridge.fit(frags, ysi.YSI, sample_weight=1/ysi.YSI_err)
 
