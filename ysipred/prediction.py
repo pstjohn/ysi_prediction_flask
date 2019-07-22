@@ -60,6 +60,7 @@ ysi = ysi.set_index('SMILES')
 def predict(smiles):
 
     try:
+        assert smiles is not None
         fragments = get_fragments(smiles)
     except Exception:
         raise FragmentError

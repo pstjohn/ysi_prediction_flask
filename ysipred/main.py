@@ -32,6 +32,10 @@ def result():
     can_smiles = canonicalize_smiles(smiles)
 
     try:
+
+        if not can_smiles:
+            raise FragmentError
+
         # Here's the real prediction step. We calculated the predicted mean +/-
         # std, draw the whole molecule, and return a dataframe of the component
         # fragments.

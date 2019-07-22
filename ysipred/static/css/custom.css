@@ -20,16 +20,6 @@ body {
   padding: 10px;
   }
 
-#ysi_reg p {
-  text-align: center;
-  font-size: 20px;
-  }
-
-#ysi_reg p span.label {
-  font-size: 100%;
-  }
-
-
 @media (min-width: 1200px) {
   .container {
     max-width: 970px;
@@ -56,3 +46,27 @@ body {
 .footer p {
   margin: 10px;
   }
+
+#bde_reg {
+  text-align: center;
+  font-size: 20px;
+  }
+
+#smiles-input {
+  display: flex;
+  }
+
+.btn {
+  margin-left: 10px;
+  }
+
+#ysi_reg p {
+  text-align: center;
+  font-size: 20px;
+  }
+
+#ysi_reg p span.label {
+  font-size: 100%;
+  }
+
+  
