@@ -66,6 +66,19 @@ def result():
               'without quotes.'.format(smiles))
         return render_template('index.html', form=form)
 
+    except Exception:
+        # Most likely a poorly-formed SMILES string.
+
+        if 'c' not in smiles.lower():
+            flash('Error: Input SMILES "{}" must contain a carbon '
+                  'atom.'.format(smiles))
+
+        else:
+            flash('Error: Unknown exception occurred with input '
+                  '{}.'.format(smiles))
+
+        return render_template('index.html', form=form)
+
 
 @app.route("/frag", methods=['GET', 'POST'])
 def frag():
