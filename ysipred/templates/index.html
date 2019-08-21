@@ -2,9 +2,12 @@
 <html>
 	<head>
 		<title>YSI Estimator</title>
-		<link rel="stylesheet" media="screen" href = "{{ url_for('static',filename='css/bootstrap.min.css') }}">
+		
+
 		<link rel="stylesheet" href = "{{ url_for('static',filename='css/bootstrap-theme.min.css') }}">
 		<link rel="stylesheet" media="print" href = "{{ url_for('static',filename='css/print.css') }}">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<link rel="stylesheet" media="screen" href = "{{ url_for('static',filename='css/bootstrap.min.css') }}">
 		<script type="text/javascript" language="javascript" src="{{ url_for('static', filename="js/jquery.min.js") }}"></script>
 		<script type="text/javascript" language="javascript" src="{{ url_for('static', filename="js/bootstrap.min.js") }}"></script>
 		<script>
@@ -12,14 +15,114 @@
 		</script>
 		<script type="text/javascript" language="javascript" src="{{ url_for('static', filename="jsme/src/jsme/jsme.nocache.js") }}"></script>
 		<meta name="viewport" content = "width=device-width, initial-scale=1.0">
+		
+		<meta charset="utf-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+	    <title>Application Title</title>
+	    
+	    <!-- == APPLICATION HEAD == -->
+		<!-- Google Tag Manager -->
+		<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+		new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+		j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=$1.
+		'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+		})(window,document,'script','dataLayer','GTM-KG7PVKB');</script>
+		<!-- End Google Tag Manager -->
+	
+	    <!-- Search engine code -->
+	    <!--#config timefmt="%Y-%m-%d@%H:%M:%S %Z" -->
+	    <meta http-equiv="last-modified" content="<!--#echo var='LAST_MODIFIED'-->">
+	
+	    <!-- Favicon -->
+		<link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename="favicon.ico") }}">
+		
+	
+	    <!-- iOS icons --> 
+	    <link rel="apple-touch-icon" href="{{ url_for('static', filename="client/img/touch-icon-iphone.png") }}">
+	    <link rel="apple-touch-icon" sizes="72x72"   href="{{ url_for('static', filename="client/img/touch-icon-ipad.png") }}">
+	    <link rel="apple-touch-icon" sizes="114x114" href="{{ url_for('static', filename="client/img/touch-icon-iphone-retina.png") }}">
+	    <link rel="apple-touch-icon" sizes="144x144" href="{{ url_for('static', filename="client/img/touch-icon-ipad-retina.png") }}">
+	      
+	    <!-- GLOBAL styles -->
+		
+	    <link href="{{ url_for('static', filename="client/css/nrel.complete.min.css") }}" rel="stylesheet" >
+	    <link href="{{ url_for('static', filename="client/css/nrel.application.min.css") }}" rel="stylesheet" >
+	
+	    <!-- NREL Application styles -->
+	
+	    <!-- Fonts -->
+		<link href="https://fonts.googleapis.com/css?family=Noto+Serif:400,400i,700,700i%7CRoboto:300,400,700" rel="stylesheet">
+	
+		<!-- Font Awesome -->
+		<script async src="//use.fontawesome.com/83c5c68c25.js"></script>
+        
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+	
+	    <!-- Google Analytics-->
+	    <script>
+	     (function() {
+	        var so = document.createElement('script'); so.type = 'text/javascript'; so.async = true;
+	        so.src = '//www.nrel.gov/includes/ga/nrel.js';
+	        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(so, s);
+	      })();
+	    </script>
+	    <!-- == END APPLICATION HEAD == -->
+		
+		
 	</head>
 	<body>
-
+		<!-- Google Tag Manager (noscript) -->
+	<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KG7PVKB"
+		height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+		<!-- End Google Tag Manager (noscript) -->
+		
+		<!-- Site application banner -->
+		<!--stopindex-->
+		<a href="#content" class="sr-only">Skip to main content</a>
+		
+		<header id="banner">
+			<div class="banner-logo">
+				<div class="container app">
+					<div class="row">
+						<div class="col-md-6 col-xl-4 order-md-2">
+							<a href="http://www.nrel.gov"><div class="logo"></div></a>
+						</div>
+						<div class="col-md-6 col-xl-8 order-md-1">
+							<a href="/" class="app-name"><h3>YSI Estimator</h3></a>
+							<p>
+								<em> by <a href="mailto:Peter.Stjohn@nrel.gov" >Peter St. John</a></em> 
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</header>
+		<!--startindex-->
+			
+			
+		<!-- TOP NAVIGATION -->
+		<!--stopindex-->
+		<!-- <div class="program-header"> -->
+			<div class="container">
+				<nav class="navbar navbar-expand-md navbar-light">
+								
+					<div id="program-menu" class="mr-auto">
+					<button class="custom-toggler navbar-toggler" type="button" data-toggle="collapse" data-target="#topnav-collapse" aria-controls="topnav-collapse" aria-expanded="false" aria-label="Toggle navigation">
+						<span class="navbar-toggler-icon"></span>
+						<span class="navbar-toggle-label">Menu</span>
+					</button>
+					</div>
+				</nav>
+			<!-- </div>program-header -->
+		</div><!--container-->
+		<!--startindex-->
 
 		<div class="container" id="input-header">
 
 
-			<h2>Online YSI Estimator</h2>
+			<!-- <h2>Test YSI Estimator</h2> -->
 			<form  action="/result" method="get" role="form">
 				{{ form.csrf }}
 				<div class="form-group" id="smiles-input">
@@ -51,51 +154,176 @@
 
 
 		</div>
-		<br>            
-
 		<div id="content" class="container">{% block content %}{% endblock %}</div>
 
-		<footer class="footer">
-			<div class='container'>
-				<p>
-				<em>Author:</em> Peter St. John<br/>
-				<em>Email:</em> peter.stjohn@nrel.gov
-				</p>
-			</div>
-		</footer>
+	<!-- == GLOBAL APPLICATION SCRIPTS == -->
+	    <!-- Bootstrap -->
+	    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+	
+		<!-- Icons plugin -->	
+		
+	    <script src="{{ url_for('static', filename="client/js/iconomatic/jquery.iconomatic.min.js") }}"></script>
+	    <script src="{{ url_for('static', filename="client/js/iconomatic/jquery.iconomatic.min.js") }}"></script>
+	
+		<!-- Global scripts -->
+	    <script src="{{ url_for('static', filename="client/js/app.min.js") }}"></script>
+	
+	    <script>
+	        /*
+	         *  Label icons
+	         */
+	        $(document).ready(function(){
+	            $('body').iconomatic({
+	                 ajax       :  true
+	                ,dataMode   :  true
+	            });
+	        });
+	    </script>
+	    <!-- == END GLOBAL APPLICATION SCRIPTS == -->
+	
+	<!-- Site application scripts -->
+	<script src="{{ url_for('static', filename="client/js/plugins.min.js") }}"></script>
+	<script src="{{ url_for('static', filename="client/js/app.min.js") }}"></script>
+	
+	<!-- jsmewindow connected to the draw link by data-target -->
+	<div class="modal fade" id="jsmewindow">
+		<div class="modal-dialog modal-dialog-centered" style="left: -5%; margin-top: 0;">
+			<div class="modal-content" style="width: fit-content;">
+				<div class="modal-body" style="height:430px;">
+					<div id="jsme_container" style="margin:auto" align="center"></div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+					<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="saveSmiles()">OK</button>
+	</div>
+</div>
+</div>
+</div>
+	<script>
+		//this function will be called after the JavaScriptApplet code has been loaded.
+		function jsmeOnLoad() {
+			jsmeApplet = new JSApplet.JSME("jsme_container", "560px", "400px");
+		}
+			//set the smile string of molecule drawing in the jsme window to the text
+			function saveSmiles() {
+					var smiles = jsmeApplet.smiles();
+					document.getElementById("name").value = smiles;
+			}
+			function drawfromSmiles(input) {
+					var smiles = document.getElementById(input).value;
+					if(smiles) {
+							jsmeApplet.readGenericMolecularInput(smiles);
+					}else {
+							jsmeApplet.reset();
+					}
+			}
+	</script>
 
+	<!-- == APPLICATION FOOTER == -->
+	<!--stopindex-->
+	<footer id="footer" class="hidden-print">
+	    <div class="container">
+	        <div class="row">
+	            <div class="col-md-10 order-md-2">
+	                <div class="row">
+	                    <div class="col-md-2">
+	                        <p class="header"><a href="/index.html">Home </a>
+	                        </p>
+	                    </div>
+	                    <div class="col-md-8">
+	                        <div class="row">
+	                            <div class="col-md-12">
+	                                <p class="header"><a href="/research/index.html">Research </a>
+	                                </p>
+	                            </div>
+	                            <div class="col-md-4">
+	                                <ul>
+	                                    <li><a href="https://www.nrel.gov/manufacturing/">Advanced Manufacturing</a></li>
+	                                    <li><a href="https://www.nrel.gov/bioenergy/">Bioenergy</a></li>
+	                                    <li><a href="https://www.nrel.gov/buildings/">Buildings</a></li>
+	                                    <li><a href="https://www.nrel.gov/chemistry-nanoscience/">Chemistry and Nanoscience</a></li>
+	                                    <li><a href="https://www.nrel.gov/computational-science/">Computational Science</a></li>
+	                                    <li><a href="https://www.nrel.gov/analysis/">Energy Analysis</a></li>
+	                                </ul>
+	                            </div>
+	                            <div class="col-md-4">
+	                                <ul>
+	                                    
+	                                    <li><a href="https://www.nrel.gov/esif/">Energy Systems Integration Facility</a></li>
+	                                    <li><a href="https://www.nrel.gov/geothermal/">Geothermal</a></li>
+	                                    <li><a href="https://www.nrel.gov/grid/">Grid Modernization</a></li>
+	                                    <li><a href="https://www.nrel.gov/hydrogen/">Hydrogen and Fuel Cells</a></li>
+	                                    <li><a href="https://www.nrel.gov/energy-solutions/">Integrated Energy Solutions</a></li>
+	                                </ul>
+	                            </div>
+	                            <div class="col-md-4">
+	                                <ul>
+	                                    <li><a href="https://www.nrel.gov/materials-science/">Materials Science</a></li>
+	                                    <li><a href="https://www.nrel.gov/solar/">Solar</a></li>
+	                                    <li><a href="https://www.nrel.gov/transportation/">Transportation</a></li>
+	                                    <li><a href="https://www.nrel.gov/water/">Water Power</a></li>
+	                                    <li><a href="https://www.nrel.gov/wind/">Wind Energy</a></li>
+	                                </ul>
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <!-- Follow -->
+	                    <div class="col-md-2">
+	                        <p class="header">Follow NREL</p>
+	                        <ul class="social-links list-inline">
+	                            <li class="list-inline-item"><a href="https://www.facebook.com/nationalrenewableenergylab" aria-label="Follow NREL on Facebook"><span class="fa fa-facebook-square"><!--facebook--></span></a>
+	                            </li>
+	                            <li class="list-inline-item"><a href="https://www.nrel.gov/news/subscribe.html" aria-label="Subscribe to news"><span class="fa fa-envelope"><!--subscribe--></span></a>
+	                            </li>
+	                            <li class="list-inline-item"><a href="https://twitter.com/nrel/" aria-label="Follow NREL on Twitter"><span class="fa fa-twitter"><!--twitter--></span></a>
+	                            </li>
+	                            <li class="list-inline-item"><a href="https://www.linkedin.com/company/national-renewable-energy-laboratory"
+	                                aria-label="Follow NREL on Linked In"><span class="fa fa-linkedin-square"><!--Linked In--></span></a>
+	                            </li>
+	                            <li class="list-inline-item"><a href="https://www.youtube.com/user/NRELPR/" aria-label="Follow NREL on YouTube"><span class="fa fa-youtube"><!--You Tube--></span></a>
+	                            </li>
+	                            <li class="list-inline-item"><a href="https://www.instagram.com/nationalrenewableenergylab/" aria-label="Follow NREL on Instagram"><span class="fa fa-instagram"><!--Instagram--></span></a>
+	                            </li>
+	                        </ul>
+	                    </div>
+	                </div>
+	            </div>
+	            <!-- NREL is... -->
+	            <div class="col-md-2 order-md-1 ft-border-right">
+	                <div class="row">
+	                    <div class="col-md-12 only-nrel">
+	                        <p class="nrel-attr">The National Renewable Energy Laboratory&#xA0;is a national laboratory
+	                            of the <a href="http://energy.gov/">U.S. Department of Energy</a>, <a href="http://energy.gov/eere/office-energy-efficiency-renewable-energy">Office of Energy Efficiency and Renewable Energy</a>,
+	                            operated by the <a href="http://www.allianceforsustainableenergy.org/">Alliance for Sustainable Energy, LLC</a>.</p>
+	                    </div>
+	                    <div class="col-lg-6">
+	                        <ul>
+	                            <li><a href="https://www.nrel.gov/security.html">Security &amp; Privacy Policy</a></li>
+	                            <li><a href="https://www.nrel.gov/accessibility.html">Accessibility</a></li>
+	                            <li><a href="https://www.nrel.gov/disclaimer.html">Disclaimer</a></li>
+	                            <li><a id="contact-link" href="https://www.nrel.gov/webmaster.html">Contact Us</a></li>
+	                        </ul>
+	                    </div>
+	                    <div class="col-lg-6">
+	                        <ul>
+	                            <li><a href="https://www.nrel.gov/careers/">Apply for a Job</a></li>
+	                            <li><a href="http://developer.nrel.gov/">Developers</a></li>
+	                            <li><a href="https://images.nrel.gov/bp/#/">Image Gallery</a></li>
+	                        </ul>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	        <div class="row">
+	            <div class="col-md-2 ft-border-right">
+					<a href="http://energy.gov"><img class="logo" src="{{ url_for('static', filename="client/img/logo-doe-footer.png") }}" alt="U.S. Department of Energy"></a>
+	            </div>
+	        </div>
+	    </div>
+	</footer>
+	<!--startindex-->
+	<!-- == END APPLICATION FOOTER == -->
+	
 	</body>
 </html>
-
-<!-- jsmewindow connected to the draw link by data-target -->
-<div class="modal fade" id="jsmewindow">
-	<div class="modal-dialog modal-dialog-centered">
-		<div class="modal-content">
-			<div class="modal-body" style="height:430px;">
-				<div id="jsme_container" style="margin:auto" align="center"></div>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-				<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="saveSmiles()">OK</button>
-</div>
-
-<script>
-    //this function will be called after the JavaScriptApplet code has been loaded.
-    function jsmeOnLoad() {
-        jsmeApplet = new JSApplet.JSME("jsme_container", "560px", "400px");
-   	}
-	 	//set the smile string of molecule drawing in the jsme window to the text
-	 	function saveSmiles() {
-		 		var smiles = jsmeApplet.smiles();
-				document.getElementById("name").value = smiles;
-	 	}
-	 	function drawfromSmiles(input) {
-				var smiles = document.getElementById(input).value;
-		 		if(smiles) {
-						jsmeApplet.readGenericMolecularInput(smiles);
-		 		}else {
-						jsmeApplet.reset();
-				}
-	 	}
-</script>
 

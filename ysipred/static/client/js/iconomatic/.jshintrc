@@ -1,0 +1,7 @@
+{
+    "strict"   : true,  // Require `use strict` pragma  in every file.
+    "white"    : false, // Check against strict whitespace and indentation rules.
+    "jquery"   : true,
+    "browser"  : true,  // Standard browser globals e.g. `window`, `document`.
+    "laxcomma" : true   // Suppress warnings about comma-first coding style.
+}
