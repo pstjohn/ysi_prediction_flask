@@ -7,6 +7,17 @@ body {
 .fragment.media:first-child {
   margin-top: 15px;
   }
+
+  
+#frags svg {
+  overflow: visible;
+  }
+
+#drawing > svg {
+  overflow: visible;
+  margin: auto;
+  display: block;
+  }
   
 @media (min-width: 1200px) {
   .container {
