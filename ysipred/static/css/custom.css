@@ -1,11 +1,14 @@
 body {
   font-size: 16px;
+  display: grid;
+  margin-bottom: 0;
   }
 
 .fragment.media:first-child {
   margin-top: 15px;
   }
 
+  
 #frags svg {
   overflow: visible;
   }
@@ -15,21 +18,7 @@ body {
   margin: auto;
   display: block;
   }
-
-#drawing {
-  padding: 10px;
-  }
-
-#ysi_reg p {
-  text-align: center;
-  font-size: 20px;
-  }
-
-#ysi_reg p span.label {
-  font-size: 100%;
-  }
-
-
+  
 @media (min-width: 1200px) {
   .container {
     max-width: 970px;
@@ -37,12 +26,12 @@ body {
 
 html {
   position: relative;
-  min-height: 100%;
 }
 
 body {
-  margin-bottom: 100px;
-  }
+  margin-bottom: 0;
+  min-height: 100vh;
+}
 
 .footer {
   font-color: 	#A9A9A9;
@@ -55,4 +44,32 @@ body {
 
 .footer p {
   margin: 10px;
+  }￼￼
+  ￼CANCEL
+  ￼OK
+  
+
+#bde_reg {
+  text-align: center;
+  font-size: 20px;
   }
+
+#smiles-input {
+  margin-top: 5em;
+  display: flex;
+  }
+
+.btn {
+  margin-left: 10px;
+  }
+
+#ysi_reg p {
+  text-align: center;
+  font-size: 20px;
+  }
+
+#ysi_reg p span.label {
+  font-size: 100%;
+  }
+
+  

@@ -32,6 +32,10 @@ def result():
     can_smiles = canonicalize_smiles(smiles)
 
     try:
+
+        if not can_smiles:
+            raise FragmentError
+
         # Here's the real prediction step. We calculated the predicted mean +/-
         # std, draw the whole molecule, and return a dataframe of the component
         # fragments.
@@ -60,7 +64,20 @@ def result():
 
         flash('Error: "{}" SMILES string invalid. Please enter a valid SMILES '
               'without quotes.'.format(smiles))
-        return render_template('index.html', form=form)
+        return render_template('base.html', form=form)
+
+    except Exception:
+        # Most likely a poorly-formed SMILES string.
+
+        if 'c' not in smiles.lower():
+            flash('Error: Input SMILES "{}" must contain a carbon '
+                  'atom.'.format(smiles))
+
+        else:
+            flash('Error: Unknown exception occurred with input '
+                  '{}.'.format(smiles))
+
+        return render_template('base.html', form=form)
 
 
 @app.route("/frag", methods=['GET', 'POST'])

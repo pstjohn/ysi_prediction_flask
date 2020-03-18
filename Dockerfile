@@ -14,5 +14,4 @@ COPY ysipred /deploy/app
 
 WORKDIR /deploy/app
 
-# ENTRYPOINT ["/bin/bash", "-c"]
-ENTRYPOINT ["gunicorn", "--bind", "0.0.0.0:2222", "main:app"]
+CMD gunicorn --bind 0.0.0.0:$PORT main:app

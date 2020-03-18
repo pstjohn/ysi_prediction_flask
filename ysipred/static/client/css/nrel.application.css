@@ -1,0 +1,38 @@
+header{
+    border-bottom:1px solid #d1d5d8
+}
+#content{
+    margin-top:.5em
+}
+
+header .logo{
+    background-position:center center
+}
+@media (min-width:768px){
+    #content{
+        margin-top:1em
+    }
+    header .logo{
+        background-position:center right
+    }
+    .navbar-wrapper .container.app{
+        border-top:none
+    }
+}
+header a.app-name,header a.app-name:hover,header a.app-name:visited{
+    color:#4B545A;
+    display:block;
+    font-family:Roboto;
+    font-size:1.5rem;
+    line-height:1.2em;
+    margin:0 0 .3em;
+    text-align:center;
+    text-decoration:none
+}
+@media (min-width:768px){
+    header a.app-name,header a.app-name:hover,header a.app-name:visited {
+        font-size:1.85rem;
+        margin-top:28px;
+        text-align:left
+    }
+}

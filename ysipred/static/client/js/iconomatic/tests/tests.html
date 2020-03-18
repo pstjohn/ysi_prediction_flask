@@ -1,0 +1,158 @@
+<html>
+<head>
+    <title>Iconomatic Tester</title>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.js"></script>
+<script src="../jquery.iconomatic.js"></script>
+<script>
+    $(document).ready( function() {
+        $('body').iconomatic({
+             ajax       :  true
+            ,dataMode   :  true
+            //,iconClass  :  'customclass'
+            //,dataAttr   :  'customdataattr'
+            //,filesObj :   customfiles
+        });
+    });
+</script>
+
+<!-- Code for testing dynamic content loading -->
+<script>
+$(document).ready( function() {
+
+    //add ajax event handler
+    $('.button-get').on('click',function(){
+        var def = $.ajax({
+            type: 'GET'
+            ,url: 'ajaxcontent.html'
+        });
+
+        // success callback
+        def.done( function( result ){
+            $( '#container-get' ).html( result );
+        });
+
+        return false;
+    });
+
+    // handler for jquery load event
+    $('.button-load').on('click',function(){
+        $('#container-load').load('ajaxcontent.html #list-o-files');
+        return false;
+    });
+
+    // handler for generic add
+    $('.button-noajax').on('click', function(){
+        var html ='';
+        html += '<div id="list-o-files">'
+        html += '<h3>New links!</h3>'
+        html += '<ul>'
+        html += '<li><a href="foo.pdf">OMG Kittens (href is PDF)</a></li>'
+        html += '<li><a href="foo.foo" data-iconomatic="pdf">OMG Kittens (data iconomatic is pdf)</a></li>'
+        html += '</ul>'
+        html += '</div>'
+
+        $('#container-noajax').html( html );
+    });
+});
+</script>
+
+<!-- For testing custom filetype option -->
+
+<script>
+    var customfiles = {
+        "docms": {
+            "path": "//www.nrel.gov/images/icon_word.gif",
+            "type": "Microsoft Word"
+        },
+        "mpgfoo": {
+            "path": "//www.nrel.gov/images/icon_video.gif",
+            "type": "Video"
+        },
+    };
+</script>
+
+
+<!-- Styles for testing custom class option  -->
+<style type="text/css">
+    .fileIcon {
+        vertical-align:baseline;
+        margin-left: 3px;
+    }
+    .customclass {
+        background-color: red;
+        vertical-align:baseline;
+        margin-left: 3px;
+    }
+</style>
+</head>
+
+<body>
+    <div class="valid-test">
+        <h3>Valid test cases</h3>
+        <ol>
+        <li><a href="some.avi">href="some.avi"</a></li>
+        <li><a href="some.pdf">href="some.pdf"</a></li>
+        </ol>
+
+        <h3>Valid if dataMode: true (and default dataAttr)</h3>
+        <ol>
+        <li><a href="some.foo" data-iconomatic="mp3">data-iconomatic="mp3"</a></li>
+        <li><a href=""         data-iconomatic="xls">href=""  data-iconomatic="xls"</a></li>
+        <li><a data-iconomatic="doc" onclick="window.location='foo.doc'">data-iconomatic="doc"  (no href)</a></li>
+        </ol>
+    </div>
+
+    <hr>
+
+    <div class="invalid-test">
+        <h3>Invalid test cases</h3>
+        <ol>
+        <li><a href="test.foo">href="test.foo"</a></li>
+        <li><a href="blah"> href="blah"</a></li>
+        <li><a href="blah.html">href="blah.html"</a></li>
+        <li><a name="" class="">name="" class="" (no href)</a></li>
+        </ol>
+    </div>
+
+    <hr>
+
+    <div class="options-test">
+        <h3>Tests for user options (conditionally valid/invalid depending on init)</h3>
+        <blockquote>
+
+            <h3>Custom filesObj test</h3>
+            <ul>
+            <li><a href="some.docms">href="some.docms"</a></li>
+            </ul>
+
+
+            <h3>Custom dataAttr and custom file type test</h3>
+            <ul>
+            <li><a href="some.foo" data-customdataattr="mpgfoo">data-customdataattr="mpgfoo"</a></li>
+            </ul>
+        </blockquote>
+    </div>
+
+    <hr>
+
+    <div class="dynamic-content">
+        <h3>Dynamic region test</h3>
+        <blockquote>
+        <input type="button" value="AJAX get" class="button-get">
+        <div id="container-get">ajax get will go here</div>
+
+        <hr>
+
+        <input type="button" value="jQ.load()" class="button-load">
+        <div id="container-load">jQ.load will go here...</div>
+
+        <hr>
+
+        <input type="button" value="jquery (non ajax) append dom node" class="button-noajax">
+        <div id="container-noajax">jquery html (noajax) here</div>
+        </blockquote>
+    </div>
+
+</body>
+</html>

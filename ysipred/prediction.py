@@ -25,6 +25,7 @@ currdir = os.path.dirname(os.path.abspath(__file__))
 
 # Load YSI data
 ysi = pd.concat([
+    pd.read_csv(currdir + '/YSIs_for_prediction/20191001_nalkanes.csv'),
     pd.read_csv(currdir + '/YSIs_for_prediction/20190502_peters_compounds.csv'),
     pd.read_csv(currdir + '/YSIs_for_prediction/20190128_furanics.csv'),
     pd.read_csv(currdir + '/YSIs_for_prediction/20180825_oxygenated_aromatics.csv'),
@@ -60,6 +61,7 @@ ysi = ysi.set_index('SMILES')
 def predict(smiles):
 
     try:
+        assert smiles is not None
         fragments = get_fragments(smiles)
     except Exception:
         raise FragmentError

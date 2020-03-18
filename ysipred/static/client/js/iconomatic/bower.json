@@ -1,0 +1,24 @@
+{
+  "name": "iconomatic",
+  "version": "1.0.0",
+  "authors": [
+    "Michael Oakley <Michael.Oakley@nrel.gov>"
+  ],
+  "description": "jQuery plugin that detect links to native files and append the proper icon image",
+  "main": "jquery.iconomatic.js",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "jquery",
+    "icons"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

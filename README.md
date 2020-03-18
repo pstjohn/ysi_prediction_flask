@@ -1,5 +1,6 @@
 # Flask App for YSI prediction
 
+Now live at https://ml.nrel.gov/ysi
 
 The only tricky dependency here is [`rdkit`](http://www.rdkit.org/docs/Install.html), but it can be installed with 
 ```
