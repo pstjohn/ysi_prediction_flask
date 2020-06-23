@@ -1,5 +1,5 @@
-from flask import Flask, render_template, request, redirect, Markup, flash
-from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField
+from flask import Flask, render_template, request, Markup, flash, jsonify
+from wtforms import Form, TextField, validators
 
 import urllib.parse
 
@@ -9,9 +9,10 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 app.config['SECRET_KEY'] = '7d441f27d441f27567d441f2b6176a'
 
-from prediction import predict, return_fragment_matches
-from fragdecomp.fragment_decomposition import draw_mol_svg, FragmentError, draw_fragment
-from fragdecomp.chemical_conversions import canonicalize_smiles
+from ysi_flask.prediction import predict, return_fragment_matches
+from ysi_flask.fragdecomp.fragment_decomposition import (
+    draw_mol_svg, FragmentError, draw_fragment)
+from ysi_flask.fragdecomp.chemical_conversions import canonicalize_smiles
 
 class ReusableForm(Form):
     name = TextField('SMILES:', validators=[validators.required()])
@@ -102,4 +103,19 @@ def frag():
         # flash('Error: "{}" fragment invalid.'.format(frag_str))
         # return render_template('index.html', form=form)
 
+@app.route("/api/<smiles>", methods=['GET'])
+def api(smiles):
 
+    can_smiles = canonicalize_smiles(smiles)
+    if not can_smiles:
+        return None
+
+    mean, std, outlier, frag_df, exp_mean, exp_std, exp_name = predict(can_smiles)
+    return jsonify({
+        'mean': mean,
+        'std': std,
+        'outlier': outlier,
+        'exp_mean': exp_mean,
+        'exp_std': exp_std,
+        'exp_name': exp_name,
+    })

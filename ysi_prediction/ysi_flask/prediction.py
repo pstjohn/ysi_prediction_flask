@@ -2,17 +2,14 @@ import os
 import pandas as pd
 import numpy as np
 
-from fragdecomp.fragment_decomposition import (get_fragments, draw_fragment,
-                                               FragmentError, draw_mol_svg)
-from fragdecomp.nullspace_outlier import NullspaceClassifier
-from fragdecomp.chemical_conversions import canonicalize_smiles
 from sklearn.linear_model import BayesianRidge
 
-try:
-    from colors import husl_palette
-except ImportError:
-    pass
+from ysi_flask.fragdecomp.fragment_decomposition import (
+    get_fragments, draw_fragment, FragmentError, draw_mol_svg)
+from ysi_flask.fragdecomp.nullspace_outlier import NullspaceClassifier
+from ysi_flask.fragdecomp.chemical_conversions import canonicalize_smiles
 
+from ysi_flask.colors import husl_palette
 
 try:
     from flask import Markup
@@ -20,22 +17,8 @@ try:
 except ImportError:
     flask = False
 
-
-currdir = os.path.dirname(os.path.abspath(__file__))
-
-# Load YSI data
-ysi = pd.concat([
-    pd.read_csv(currdir + '/YSIs_for_prediction/20200319_new_synthesis.csv'),
-    pd.read_csv(currdir + '/YSIs_for_prediction/20191001_nalkanes.csv'),
-    pd.read_csv(currdir + '/YSIs_for_prediction/20190502_peters_compounds.csv'),
-    pd.read_csv(currdir + '/YSIs_for_prediction/20190128_furanics.csv'),
-    pd.read_csv(currdir + '/YSIs_for_prediction/20180825_oxygenated_aromatics.csv'),
-    pd.read_csv(currdir + '/YSIs_for_prediction/20180703_new_nitrogenated_compounds.csv'),
-    pd.read_csv(currdir + '/YSIs_for_prediction/20180720_acetyl_ysis.csv'),
-    pd.read_csv(currdir + '/YSIs_for_prediction/ysi.csv'),
-], sort=False).reset_index(drop=True)
-
-ysi = ysi.drop_duplicates(subset='SMILES', keep='first')
+# Grab the most recent YSI data from github
+ysi = pd.read_csv('https://raw.githubusercontent.com/pstjohn/YSIs_for_prediction/master/ysi.csv')
 
 # we use this for weighting, so provide a 5% relative error if none given
 ysi.YSI_err = ysi.YSI_err.fillna(np.abs(ysi.YSI * 0.05))

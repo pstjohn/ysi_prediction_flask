@@ -13,3 +13,4 @@ dependencies:
 - nomkl
 - numpy
 - wtforms
+- pytest
