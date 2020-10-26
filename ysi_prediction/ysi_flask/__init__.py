@@ -67,7 +67,7 @@ def result():
               'without quotes.'.format(smiles))
         return render_template('base.html', form=form)
 
-    except Exception:
+    except Exception as ex:
         # Most likely a poorly-formed SMILES string.
 
         if 'c' not in smiles.lower():
@@ -75,8 +75,8 @@ def result():
                   'atom.'.format(smiles))
 
         else:
-            flash('Error: Unknown exception occurred with input '
-                  '{}.'.format(smiles))
+            flash('Error: Exception occurred with input '
+                  '{0}: {1}'.format(smiles, ex))
 
         return render_template('base.html', form=form)
 
