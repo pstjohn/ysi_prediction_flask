@@ -1,7 +1,6 @@
-from flask import Flask, render_template, request, Markup, flash, jsonify
-from wtforms import Form, TextField, validators
-
 import urllib.parse
+from flask import Flask, Markup, flash, jsonify, render_template, request
+from wtforms import Form, TextField, validators
 
 # App config.
 DEBUG = True
@@ -14,11 +13,14 @@ from ysi_flask.fragdecomp.fragment_decomposition import (
     draw_mol_svg, FragmentError, draw_fragment)
 from ysi_flask.fragdecomp.chemical_conversions import canonicalize_smiles
 
+
 class ReusableForm(Form):
     name = TextField('SMILES:', validators=[validators.required()])
 
+
 def quote(x):
     return urllib.parse.quote(x, safe='')
+
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
@@ -56,7 +58,7 @@ def result():
 
         return render_template(
             "result.html", form=form, smiles=smiles, mol_svg=svg, mean=mean,
-            std=std, frag_df=frag_df[frag_df['train_count'] > 0], 
+            std=std, frag_df=frag_df[frag_df['train_count'] > 0],
             outlier=outlier, exp_mean=exp_mean, exp_std=exp_std,
             frag_missing_df=frag_df[frag_df['train_count'] == 0])
 
@@ -83,7 +85,6 @@ def result():
 
 @app.route("/frag", methods=['GET', 'POST'])
 def frag():
-
     form = ReusableForm(request.form)
     frag_str = request.args['name']
 
@@ -99,18 +100,26 @@ def frag():
         "frag.html", form=form, frag_str=frag_str, frag_svg=frag_svg,
         fragrow=fragment_row, matches=matches)
 
-    # except KeyError:
-        # flash('Error: "{}" fragment invalid.'.format(frag_str))
-        # return render_template('index.html', form=form)
 
-@app.route("/api/<smiles>", methods=['GET'])
+@app.route('/api', defaults={'smiles': None}, methods=['GET'])
+@app.route("/api/<string:smiles>", methods=['GET'])
 def api(smiles):
+    if smiles is None and 'smiles' in request.args:
+        smiles = urllib.parse.unquote(request.args['smiles'])
 
-    can_smiles = canonicalize_smiles(smiles)
-    if not can_smiles:
-        return None
+    try:
+        can_smiles = canonicalize_smiles(smiles)
+        if not can_smiles:
+            raise RuntimeError
 
-    mean, std, outlier, frag_df, exp_mean, exp_std, exp_name = predict(can_smiles)
+    except RuntimeError:
+        return jsonify({'status': 'invalid smiles'})
+
+    try:
+        mean, std, outlier, frag_df, exp_mean, exp_std, exp_name = predict(can_smiles)
+    except ValueError:
+        return jsonify({'status': 'prediction error'})
+
     return jsonify({
         'mean': mean,
         'std': std,
@@ -118,4 +127,5 @@ def api(smiles):
         'exp_mean': exp_mean,
         'exp_std': exp_std,
         'exp_name': exp_name,
+        'status': 'ok',
     })

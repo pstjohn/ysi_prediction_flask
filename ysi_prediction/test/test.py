@@ -25,3 +25,17 @@ def test_out_of_scope(client):
 def test_invalid(client):
     rv = client.get('/result?name=')
     assert b'Please enter a valid SMILES without quotes' in rv.data
+
+
+def test_api(client):
+    data = client.get('/api/CCO').get_json()
+    assert data['status'] == 'ok'
+
+    data = client.get('/api?smiles=C%2FC%3DC%2FC').get_json()
+    assert data['status'] == 'ok'
+
+    data = client.get('/api/CB').get_json()
+    assert data['outlier'] == True
+
+    data = client.get('/api/X').get_json()
+    assert data['status'] == 'invalid smiles'
