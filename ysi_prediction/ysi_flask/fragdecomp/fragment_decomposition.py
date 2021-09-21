@@ -42,7 +42,7 @@ def iter_carbons(mol):
 
     """
     for a in mol.GetAtoms():
-        if a.GetSymbol() is 'C':
+        if a.GetSymbol() == 'C':
             yield a
 
         # elif a.GetSymbol() is 'O':
