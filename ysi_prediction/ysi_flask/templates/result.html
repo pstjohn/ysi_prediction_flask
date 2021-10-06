@@ -9,7 +9,7 @@
 <div id='ysi_reg'>
 	<div class="alert alert-success">
 	<p>
-	Measured YSI: 
+	Measured YSI:
 	<em>{{ exp_mean }} &plusmn; {{ exp_std }} </em>
 	</p>
 </div>
@@ -18,12 +18,12 @@
 
 <div id='ysi_reg'>
 	<p>
-	Estimated YSI: 
+	Estimated YSI:
 	<em>{{ mean }} &plusmn; {{ std }} </em>
 	{% if outlier %}
-	<span class="label label-danger">Outlier</span>
+	<span class="badge badge-danger">Outlier</span>
 	{% else %}
-	<span class="label label-success">Inlier</span>
+	<span class="badge badge-success">Inlier</span>
 	{% endif %}
 	</p>
 </div>
@@ -75,4 +75,3 @@
 </div>
 
 {% endblock %}
-

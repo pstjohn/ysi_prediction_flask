@@ -1,6 +1,7 @@
 import urllib.parse
 from fastapi import FastAPI, Path, Request
 from fastapi.middleware.wsgi import WSGIMiddleware
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from typing import Optional
 from flask import Flask, Markup, flash, jsonify, render_template, request
@@ -170,6 +171,7 @@ async def api(api_request: Request, smiles: str = smiles_path):
         'exp_name': exp_name,
         'status': 'ok',
     }
-
+apiapp.mount("/client", StaticFiles(directory="ysi_flask/static/client"), name="client")
+apiapp.mount("/static", StaticFiles(directory="ysi_flask/static"), name="static")
 apiapp.mount("/", WSGIMiddleware(flask_app))
 app = apiapp
