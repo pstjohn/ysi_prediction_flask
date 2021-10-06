@@ -1,9 +1,10 @@
 import pytest
-from ysi_flask import app
+from ysi_flask import flask_app, app
+from fastapi.testclient import TestClient
 
 @pytest.fixture
 def client():
-    with app.test_client() as client:
+    with flask_app.test_client() as client:
         yield client
 
 def test_index(client):
@@ -27,15 +28,18 @@ def test_invalid(client):
     assert b'Please enter a valid SMILES without quotes' in rv.data
 
 
+
+fastapi_client=TestClient(app)
+
 def test_api(client):
-    data = client.get('/api/CCO').get_json()
+    data = fastapi_client.get('/predict/CCO').json()
     assert data['status'] == 'ok'
 
-    data = client.get('/api?smiles=C%2FC%3DC%2FC').get_json()
-    assert data['status'] == 'ok'
+    # data = fastapi_client.get('/predict?smiles=C%2FC%3DC%2FC').json()
+    # assert data['status'] == 'ok'
 
-    data = client.get('/api/CB').get_json()
+    data = fastapi_client.get('/predict/CB').json()
     assert data['outlier'] == True
 
-    data = client.get('/api/X').get_json()
+    data = fastapi_client.get('/predict/X').json()
     assert data['status'] == 'invalid smiles'
