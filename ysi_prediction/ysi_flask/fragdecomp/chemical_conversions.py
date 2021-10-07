@@ -1,9 +1,9 @@
 import re
-from urllib.request import urlopen
 import ssl
+from urllib.request import urlopen
 
-from rdkit.Chem.inchi import MolFromInchi, MolToInchi
 from rdkit.Chem import MolToSmiles, MolFromSmiles
+from rdkit.Chem.inchi import MolFromInchi, MolToInchi
 
 try:
     import pubchempy as pcp
@@ -20,7 +20,6 @@ CAS_search = re.compile(
 
 
 def get_smiles_from_name(name):
-
     if not pcp:
         raise RuntimeError('No Pubchempy')
 
@@ -48,18 +47,18 @@ def get_smiles_from_cas(cas, db='nih'):
         if db == 'nih':
             smiles = urlopen(
                 'http://cactus.nci.nih.gov/chemical/structure/{}/SMILES'
-                .format(cas), context=context).read().decode()
+                    .format(cas), context=context).read().decode()
 
         elif db == 'nist':
             html = urlopen(
                 'http://webbook.nist.gov/cgi/cbook.cgi?ID={}&Units=SI'
-                .format(cas), context=context).read().decode()
+                    .format(cas), context=context).read().decode()
             smiles = smiles_from_inchi(inchi_search.findall(html)[0])
 
         elif db == 'chemid':
             html = urlopen(
                 'http://chem.sis.nlm.nih.gov/chemidplus/rn/{}'
-                .format(cas), context=context).read().decode()
+                    .format(cas), context=context).read().decode()
             smiles = re.sub('<wbr>', '', smiles_search.findall(html)[0])
 
         return canonicalize_smiles(smiles)
@@ -97,11 +96,12 @@ def check_cas(cas):
 
 cas_search = re.compile('([0-9]{2,7}-[0-9]{2}-[0-9])')
 
+
 def get_cas_from_inchi(inchi):
     try:
         html = urlopen(
             'http://webbook.nist.gov/cgi/cbook.cgi?InChI={}&Units=SI'
-            .format(inchi)).read().decode()
+                .format(inchi)).read().decode()
         cas = CAS_search.findall(html)[0]
         if check_cas(cas):
             return cas
@@ -130,7 +130,7 @@ def get_cas_from_name(name, db='webbook'):
         if db == 'webbook':
             html = urlopen(
                 'http://webbook.nist.gov/cgi/cbook.cgi?Name={}&Units=SI&cTP=on'
-                .format(name.lower().replace(',', '%2C'))).read().decode()
+                    .format(name.lower().replace(',', '%2C'))).read().decode()
             CAS = CAS_search.findall(html)[0]
             if check_cas(CAS):
                 return CAS

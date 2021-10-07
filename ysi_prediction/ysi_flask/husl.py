@@ -1,8 +1,7 @@
-import operator
 import math
+import operator
 
 __version__ = "2.1.0"
-
 
 m = [
     [3.2406, -1.5372, -0.4986],

@@ -1,15 +1,16 @@
-from collections import Counter
 import re
+from collections import Counter
 
 import pandas as pd
-
 from rdkit import Chem
-# from IPython.display import SVG
-
 from rdkit.Chem import rdDepictor
 from rdkit.Chem.Draw import rdMolDraw2D
 
 from ysi_flask.fragdecomp.chemical_conversions import canonicalize_smiles
+
+
+# from IPython.display import SVG
+
 
 class FragmentError(Exception):
     pass
@@ -27,9 +28,9 @@ def get_fragments(smiles):
         mol = Chem.MolFromSmiles(canonicalize_smiles(smiles, isomeric=False))
         mol = Chem.AddHs(mol)  # This seems important to get just the next C
         return pd.Series(Counter((
-                    get_environment_smarts(carbon, mol)
-                    for carbon in iter_carbons(mol))))
-    
+            get_environment_smarts(carbon, mol)
+            for carbon in iter_carbons(mol))))
+
     except Exception:
         # Deal with wierd rdkit errors
         raise FragmentError
@@ -63,10 +64,10 @@ def get_environment_smarts(carbon, mol):
 
     """
     bond_list = list(Chem.FindAtomEnvironmentOfRadiusN(
-            mol, 1, carbon.GetIdx(), useHs=True))
-    
+        mol, 1, carbon.GetIdx(), useHs=True))
+
     bond_smarts = bond_list_to_smarts(mol, bond_list)
-    
+
     if carbon.IsInRing():
         return bond_smarts + ' | (Ring)'
     else:
@@ -142,7 +143,7 @@ def draw_mol_svg(mol_str, color_dict=None, figsize=(300, 300), smiles=True):
         highlight_colors_dict = pd.DataFrame(matches).merge(
             pd.DataFrame(pd.Series(color_dict)), left_on=0,
             right_index=True)['0_y']
-        
+
         drawer.DrawMolecule(
             mc, highlightAtoms=tuple(highlight_colors_dict.index),
             highlightAtomColors=highlight_colors_dict.to_dict(),
@@ -176,7 +177,6 @@ def flatten(l, ltypes=(list, tuple)):
 
 
 def draw_fragment(fragment_name, color):
-    
     mol = Chem.MolFromSmarts(re.sub(' \|.*$', '', fragment_name))
     mc = Chem.Mol(mol.ToBinary())
     rdDepictor.Compute2DCoords(mc)
@@ -185,11 +185,11 @@ def draw_fragment(fragment_name, color):
 
     center = int(pd.Series({atom.GetIdx(): len(atom.GetNeighbors()) for atom in
                             mol.GetAtoms()}).idxmax())
-    
+
     to_highlight = [center]
     radius_dict = {center: 0.5}
     color_dict = {center: color}
-    
+
     drawer.DrawMolecule(mc, highlightAtoms=to_highlight,
                         highlightAtomColors=color_dict,
                         highlightAtomRadii=radius_dict,
@@ -199,4 +199,3 @@ def draw_fragment(fragment_name, color):
     svg = drawer.GetDrawingText()
 
     return svg.replace('svg:', '').replace(':svg', '')
-
