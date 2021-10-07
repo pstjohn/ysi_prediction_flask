@@ -1,12 +1,17 @@
 import urllib.parse
+from fastapi import FastAPI, Path, Request
+from fastapi.middleware.wsgi import WSGIMiddleware
+from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel
+from typing import Optional
 from flask import Flask, Markup, flash, jsonify, render_template, request
 from wtforms import Form, TextField, validators
 
 # App config.
 DEBUG = True
-app = Flask(__name__)
-app.config.from_object(__name__)
-app.config['SECRET_KEY'] = '7d441f27d441f27567d441f2b6176a'
+flask_app = Flask(__name__)
+flask_app.config.from_object(__name__)
+flask_app.config['SECRET_KEY'] = '7d441f27d441f27567d441f2b6176a'
 
 from ysi_flask.prediction import predict, return_fragment_matches
 from ysi_flask.fragdecomp.fragment_decomposition import (
@@ -22,13 +27,13 @@ def quote(x):
     return urllib.parse.quote(x, safe='')
 
 
-@app.route("/", methods=['GET', 'POST'])
+@flask_app.route("/", methods=['GET', 'POST'])
 def index():
     form = ReusableForm(request.form)
     return render_template('index.html', form=form)
 
 
-@app.route("/result", methods=['GET', 'POST'])
+@flask_app.route("/result", methods=['GET', 'POST'])
 def result():
     form = ReusableForm(request.form)
     smiles = request.args['name']
@@ -83,7 +88,7 @@ def result():
         return render_template('base.html', form=form)
 
 
-@app.route("/frag", methods=['GET', 'POST'])
+@flask_app.route("/frag", methods=['GET', 'POST'])
 def frag():
     form = ReusableForm(request.form)
     frag_str = request.args['name']
@@ -101,11 +106,48 @@ def frag():
         fragrow=fragment_row, matches=matches)
 
 
-@app.route('/api', defaults={'smiles': None}, methods=['GET'])
-@app.route("/api/<string:smiles>", methods=['GET'])
-def api(smiles):
-    if smiles is None and 'smiles' in request.args:
-        smiles = urllib.parse.unquote(request.args['smiles'])
+# FastAPI changes below
+class Prediction(BaseModel):
+    mean: Optional[float] = None
+    std: Optional[float] = None
+    outlier: Optional[bool] = None
+    exp_mean: Optional[float] = None
+    exp_std: Optional[float] = None
+    exp_name: Optional[str] = None
+    status: str
+
+
+description = """This tool predicts the Yield Sooting Index of a compound
+as a function of its carbon types. To use, enter a SMILES string above (or
+use the drawing tool) and press submit. Experimental measurements, when
+available, are also displayed."""
+tags_metadata = [
+    {
+        "name": "predict",
+        "description": "Group-contribution predictions of Yield Sooting Index (YSI)",
+    },
+]
+
+apiapp = FastAPI(
+    title="YSI Estimator",
+    description=description,
+    version="1.0",
+    # terms_of_service="http://example.com/terms/",
+    contact={
+        "name": "Peter St. John",
+        "url": "https://www.nrel.gov/research/peter-stjohn.html",
+    },
+    # license_info={
+    #     "name": "TBD",
+    #     "url": "TBD",
+    # },
+    openapi_tags=tags_metadata,
+)
+smiles_path = Path(..., title="Enter a SMILES string", example="CC1=CC(=CC(=C1)O)C")
+@apiapp.get("/predict/{smiles}", response_model=Prediction, tags=["predict"])
+async def api(api_request: Request, smiles: str = smiles_path):
+    # if smiles is None and 'smiles' in api_request.args:
+    #     smiles = urllib.parse.unquote(api_request.args['smiles'])
 
     try:
         can_smiles = canonicalize_smiles(smiles)
@@ -113,14 +155,14 @@ def api(smiles):
             raise RuntimeError
 
     except RuntimeError:
-        return jsonify({'status': 'invalid smiles'})
+        return {'status': 'invalid smiles'}
 
     try:
         mean, std, outlier, frag_df, exp_mean, exp_std, exp_name = predict(can_smiles)
     except ValueError:
-        return jsonify({'status': 'prediction error'})
+        return {'status': 'prediction error'}
 
-    return jsonify({
+    return {
         'mean': mean,
         'std': std,
         'outlier': outlier,
@@ -128,4 +170,8 @@ def api(smiles):
         'exp_std': exp_std,
         'exp_name': exp_name,
         'status': 'ok',
-    })
+    }
+apiapp.mount("/client", StaticFiles(directory="ysi_flask/static/client"), name="client")
+apiapp.mount("/static", StaticFiles(directory="ysi_flask/static"), name="static")
+apiapp.mount("/", WSGIMiddleware(flask_app))
+app = apiapp
