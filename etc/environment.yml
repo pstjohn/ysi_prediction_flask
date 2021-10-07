@@ -8,7 +8,7 @@ dependencies:
   - flask
   - gunicorn
   - pandas
-  - python=3.6
+  - python
   - rdkit
   - scikit-learn
   - scipy
