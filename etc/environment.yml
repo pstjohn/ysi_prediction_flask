@@ -1,0 +1,20 @@
+name: root
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - aiofiles
+  - fastapi
+  - flask
+  - gunicorn
+  - pandas
+  - python
+  - rdkit
+  - scikit-learn
+  - scipy
+  - nomkl
+  - numpy
+  - uvicorn
+  - wtforms
+  - pytest
+  - requests

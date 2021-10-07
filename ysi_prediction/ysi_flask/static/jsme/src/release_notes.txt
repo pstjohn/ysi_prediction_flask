@@ -1,3 +1,137 @@
+
+2021-07-13
+    - improved example file JSME_test.html
+    - sulfonylmethanediamine SMILES generation bug fix
+    - improved JavaDoc
+
+2021-06-10
+	
+	- Undo stack stores the state of the editor during editor initialization 
+	- Possibility to set default format for copy/cut and D&D
+	- Chiral flag status shown in the info bar
+	- Avoid browser window automatic scroll when the mouse pointer moves on the editor
+	- bug fix: setTemplate()
+	
+	
+2021-05-10
+	- sub and superscript text style for the number of hydrogens and charges
+	
+2021-04-05
+
+	- bug fix: JME output for fragments, no more coordinate overlap
+	- bug fix: recompute 2D coordinates: problem with explicit hydrogens
+	- new option: guiAtomColor (customization of JSME look)
+	- the depict example page has been extended
+	- new example JSME_access_internal_data.html
+	- new example JSME_alternative_look.html
+	- new methods: getAtom(), getBond() and getMolecule()
+	- replaced all setAfterStructureModifiedCallback() from the examples because of deprecation
+	- setBondAdditionalData bug fix (wrong event name reported)
+	- improved readability of atom labels when a background colored circle is shown (additional text stroke)
+	- custom background coloring is now independent from atom numbering and atom marker
+	
+2021-01-31
+	- new option showAtomMapNumberWithBackgroundColor
+2020-12-26
+	- migration of help.html file to https://jsme-editor.github.io/help.html
+	
+2020-12-20
+	- bug fix: deletion of an unwanted <span> used to compute a WindowPanel size (mosaic library bug)
+	- new example page: JSME_inchi_direct_interactive.html
+	- JSME event "seAtom": atom number removed from the event.action field
+
+JSME-2020-11-22"
+	- atom inspector  (number option on, right mouse click on atom) set atom map bug fix
+	- atom numbering:: typing 0 allows to reset next clicked atom (bug fix)
+
+JSME-2020-09-24:
+	- new option: markNothing
+
+JSME-2020-09-05
+	- improved examples pages JSME_atom_highlight_demo.html
+	
+JSME-2020-06-30:
+	- setBackGroundColorPalette bug fix
+
+JSME-2020-06-26
+	- new option: markerMenu
+	- new method: setMarkerMenuBackGroundColorPalette
+	- bug fix: toggle depict to edit, centering of molecule was needed
+	- R group number input bug fix
+	
+JSME-2020-06-14
+	- internal bond scaling bug fixed
+	- new test page: JSME_Rgroups.html
+	- R group R9 bug fix
+	- numeric keypad numbers bug fixed
+
+JSME-2020-06-11
+    - new mouse over information for some JSME functions
+	- MOLfile input with aromatic bond type 4, conversion to single and double bond
+	- import RXN and SMIRKS works (see test_depict_patent_reactions_smirks.html)
+	- RXN input: bug fix: detection of agents was not working
+	- improved detection of reaction role
+	- in marker mode, the color index can be set with the keyboard like atom maps
+	- methods setStarColor and setMarkerColor have been replaced by activateMarkerColor
+	- documentation update: <b>hydrogens, nohydrogens</b> - display / hide implicit hydrogens on heteroatom labels (default is hydrogens). Implicit hydrogens are calculated only if the valence state option is switched on<br>
+	- R group works again
+	
+JSME-2020-05-3
+	- jsmeEvent: additional variable atomBackgroundColorIndex
+	- colored background atom labels have rounded corners
+	- bug fix: SMILES output of atom with color marking had no atom map
+	- new active marker system: accept MOL and JME input with atom map as input
+	- the default color palette has been changed
+	- JME output format available in I/O menu
+	- atom highlight is not disabled anymore if bond stereo action is selected
+	- carbon chain bug fix: wrong charge on closing atom
+	- carbon chain event does not trigger addBond event for each bond addition anymore
+	- do not split fragments in depict mode (cross atom issue)
+	- HTML examples cleanup
+	- Additional HTML example and test pages
+	
+JSME-2020-04-19	
+	- new active marker system - preliminary
+	- generic input fires an event for MOL, RXN and JSME inputs
+	
+JSME-2020-04-13
+	- bug fix: hydrogen handling options have no effect
+	- bug fix: nocanonize was not working 
+	- reaction arrow can be moved
+	- molecule popup menu: compute 2D coordinates of the selected molecule
+	
+JSME-2020-04-08
+	- new method: setMenuXShortcuts()
+	- 3 bug fixes related to valence sate during template addition
+	- improved chemical format detector (SMARTS, CSRML)
+	- compute 2D coordinates if input molecule has none or is 3D
+	- improvement and HTML code reformatting of the example files
+	- JME string parser bug fix: handling of charges
+	- improved atom map display (smaller font, better placement)
+	- new options: 
+	     markerIconColor, markAtomOnly, markBondOnly, pseudoMark
+	- setMarkerColor() method replaces setStarColor()
+	- background color highlighting new functionalities: getNumberOfColorsForBackGroundPalette, getBackGroundColorPalette, setBackGroundColorPalette
+	- bond colored background shape is rectangular
+	- new API method: getMultiSDFstack
+	- new JSME event: readMultiSDF
+	- new methods: g(s)etAtomAdditionalData, g(s)etBondAdditionalData
+	- new methods: hasMarkedAtom(), hasMolecule()
+	- new test pages:
+		 - JSME_template_cysteine_lesson.html
+		 - JSME_custom_x_shortcuts.html
+		 
+TODO: provide in the dev doc the list of all events
+
+JSME-2019-05-11
+    - bug fix for option valenceState
+
+JSME-2019-05-05
+    - new atom shortcut: *,g
+    
+JSME-2019-04-22
+    - new option: valenceState
+    
 JSME-2019-01-30
     - doc.html cleanup
     - setUserInterfaceBackgroundColor() bug fix
@@ -56,7 +190,7 @@ JSME 2017-11-14
 JSME 2017-08-23
 	- changed showInfo() method - the custom message is not erased by a menu click
 	- improved full screen function
-	- direction of mouse wheel zoom reversed
+	- direction of mouse wheel zoom reversed (use same convention as other web applications)
 	
 JSME 2017-08-08
 	- SMILES generation stereo bug fix

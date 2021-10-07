@@ -146,10 +146,9 @@
 
 	<!-- jsmewindow connected to the draw link by data-target -->
 	<div class="modal fade" id="jsmewindow">
-		<div class="modal-dialog modal-dialog-centered" style="left: -5%; margin-top: 0;">
-			<div class="modal-content" style="width: fit-content;">
-				<div class="modal-body" style="height:430px;">
-					<div id="jsme_container" style="margin:auto" align="center"></div>
+		<div class="modal-dialog modal-dialog-centered modal-lg">
+			<div class="modal-content">
+				<div id="jsme_container" class="modal-body" style="height:430px;">
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
@@ -162,23 +161,29 @@
 	<link href="static/css/custom.css" rel="stylesheet" >
 	<script type="text/javascript" language="javascript" src="static/jsme/src/jsme/jsme.nocache.js"></script>
 	<script>
+		$('#jsmewindow').on('shown.bs.modal', function (e) {
+			jsmeApplet.setWidth($("#jsme_container").width() + "px");
+		});
+
+		window.onresize = e => { jsmeApplet.setWidth($("#jsme_container").width() + "px") };
+
 		//this function will be called after the JavaScriptApplet code has been loaded.
 		function jsmeOnLoad() {
-			jsmeApplet = new JSApplet.JSME("jsme_container", "560px", "400px");
+			jsmeApplet = new JSApplet.JSME("jsme_container", "768px", "400px");
 		}
-		//set the smile string of molecule drawing in the jsme window to the text
-		function saveSmiles() {
-				var smiles = jsmeApplet.smiles();
-				document.getElementById("name").value = smiles;
-		}
-		function drawfromSmiles(input) {
-				var smiles = document.getElementById(input).value;
-				if(smiles) {
-						jsmeApplet.readGenericMolecularInput(smiles);
-				}else {
-						jsmeApplet.reset();
-				}
-		}
+			//set the smile string of molecule drawing in the jsme window to the text
+			function saveSmiles() {
+					var smiles = jsmeApplet.smiles();
+					document.getElementById("name").value = smiles;
+			}
+			function drawfromSmiles(input) {
+					var smiles = document.getElementById(input).value;
+					if(smiles) {
+							jsmeApplet.readGenericMolecularInput(smiles);
+					}else {
+							jsmeApplet.reset();
+					}
+			}
 	</script>
 
 	<!-- == APPLICATION FOOTER | updated 3/2021 == -->

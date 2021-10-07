@@ -1,10 +1,12 @@
+import os
 import urllib.parse
+from typing import Optional
+
 from fastapi import FastAPI, Path, Request
 from fastapi.middleware.wsgi import WSGIMiddleware
 from fastapi.staticfiles import StaticFiles
+from flask import Flask, Markup, flash, render_template, request
 from pydantic import BaseModel
-from typing import Optional
-from flask import Flask, Markup, flash, jsonify, render_template, request
 from wtforms import Form, TextField, validators
 
 # App config.
@@ -144,6 +146,8 @@ apiapp = FastAPI(
     openapi_tags=tags_metadata,
 )
 smiles_path = Path(..., title="Enter a SMILES string", example="CC1=CC(=CC(=C1)O)C")
+
+
 @apiapp.get("/predict/{smiles}", response_model=Prediction, tags=["predict"])
 async def api(api_request: Request, smiles: str = smiles_path):
     # if smiles is None and 'smiles' in api_request.args:
@@ -171,7 +175,10 @@ async def api(api_request: Request, smiles: str = smiles_path):
         'exp_name': exp_name,
         'status': 'ok',
     }
-apiapp.mount("/client", StaticFiles(directory="ysi_flask/static/client"), name="client")
-apiapp.mount("/static", StaticFiles(directory="ysi_flask/static"), name="static")
+
+
+script_dir = os.path.dirname(__file__)
+apiapp.mount("/client", StaticFiles(directory=os.path.join(script_dir, "static/client")), name="client")
+apiapp.mount("/static", StaticFiles(directory=os.path.join(script_dir, "static")), name="static")
 apiapp.mount("/", WSGIMiddleware(flask_app))
 app = apiapp

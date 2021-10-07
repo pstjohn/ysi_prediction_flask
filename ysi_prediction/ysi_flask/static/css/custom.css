@@ -2,6 +2,15 @@ body {
   font-size: 16px;
   display: grid;
   margin-bottom: 0;
+  min-height: 100vh;
+  display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
+  display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+  display: -ms-flexbox;      /* TWEENER - IE 10 */
+  display: -webkit-flex;     /* NEW - Chrome */
+  display: flex;             /* NEW, Spec - Opera 12.1, Firefox 20+ */
+  flex-direction: column;
+  -webkit-flex-direction: column;
+  justify-content: space-between;
   }
 
 .fragment.media:first-child {
@@ -23,6 +32,12 @@ body {
   .container {
     max-width: 970px;
   }}
+
+@media (max-width: 768px) {
+  #footer-block {
+    display: -webkit-flex;
+  }
+}
 
 html {
   position: relative;

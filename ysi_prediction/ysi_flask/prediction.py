@@ -1,17 +1,16 @@
-import pandas as pd
 import numpy as np
-
+import pandas as pd
 from sklearn.linear_model import BayesianRidge
 
+from ysi_flask.colors import husl_palette
+from ysi_flask.fragdecomp.chemical_conversions import canonicalize_smiles
 from ysi_flask.fragdecomp.fragment_decomposition import (
     get_fragments, draw_fragment, FragmentError, draw_mol_svg)
 from ysi_flask.fragdecomp.nullspace_outlier import NullspaceClassifier
-from ysi_flask.fragdecomp.chemical_conversions import canonicalize_smiles
-
-from ysi_flask.colors import husl_palette
 
 try:
     from flask import Markup
+
     flask = True
 except ImportError:
     flask = False
@@ -31,18 +30,18 @@ nullspace.fit(frags)
 
 bridge = BayesianRidge(fit_intercept=False)
 
-bridge.fit(frags, ysi.YSI, sample_weight=1/ysi.YSI_err)
+bridge.fit(frags, ysi.YSI, sample_weight=1 / ysi.YSI_err)
 
 frag_means, frag_stds = bridge.predict(np.eye(frags.shape[1]), return_std=True)
 beta = pd.DataFrame(np.vstack([frag_means, frag_stds]).T,
-                       index=frags.columns, columns=['mean', 'std'])
+                    index=frags.columns, columns=['mean', 'std'])
 beta = beta.round(1)
 beta['train_count'] = frags.sum(0)
 
 ysi = ysi.set_index('SMILES')
 
-def predict(smiles):
 
+def predict(smiles):
     try:
         assert smiles is not None
         fragments = get_fragments(smiles)
@@ -69,7 +68,7 @@ def predict(smiles):
 
     # Put the fragments in the correct order
     reindexed_frags = fragments.reindex(frags.columns).fillna(0).astype(int)
-    
+
     # Make sure the fragments are not present in nonlinear combinations of database
     if nullspace.predict(reindexed_frags):
         isoutlier = True
@@ -131,7 +130,7 @@ def predict_apply(smiles):
 
     # Put the fragments in the correct order
     reindexed_frags = fragments.reindex(frags.columns).fillna(0).astype(int)
-    
+
     # Make sure the fragments are not present in nonlinear combinations of database
     if nullspace.predict(reindexed_frags):
         isoutlier = True
@@ -148,4 +147,3 @@ def predict_apply(smiles):
         'YSI': exp_mean if exp_mean else mean[0],
         'YSI_err': exp_std if exp_mean else std[0],
         'pred_type': prediction_type}, name=smiles)
-
