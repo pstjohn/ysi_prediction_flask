@@ -7,7 +7,7 @@ from fastapi.middleware.wsgi import WSGIMiddleware
 from fastapi.staticfiles import StaticFiles
 from flask import Flask, Markup, flash, render_template, request
 from pydantic import BaseModel
-from wtforms import Form, TextField, validators
+from wtforms import Form, validators, StringField
 
 # App config.
 DEBUG = True
@@ -22,7 +22,7 @@ from ysi_flask.fragdecomp.chemical_conversions import canonicalize_smiles
 
 
 class ReusableForm(Form):
-    name = TextField('SMILES:', validators=[validators.required()])
+    name = StringField('SMILES:', validators=[validators.required()])
 
 
 def quote(x):
