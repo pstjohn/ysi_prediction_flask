@@ -3,7 +3,7 @@ import numpy as np
 from ysi_flask import husl
 
 
-def husl_palette(n_colors=6, h=.01, s=.9, l=.65):
+def husl_palette(n_colors=6, h=0.01, s=0.9, l=0.65):
     """Get a set of evenly spaced colors in HUSL hue space.
     h, s, and l should be between 0 and 1
     Parameters
