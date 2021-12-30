@@ -214,3 +214,4 @@ apiapp.mount(
     "/static", StaticFiles(directory=os.path.join(script_dir, "static")), name="static"
 )
 apiapp.mount("/", WSGIMiddleware(flask_app))
+app = apiapp

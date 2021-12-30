@@ -11,13 +11,13 @@ except ImportError:
     pcp = False
 
 inchi_search = re.compile(
-    "[^Get](InChI=[0-9BCOHNSOPrIFla+\-\(\)\\\/,pqbtmsih]{6,})", re.IGNORECASE
+    r"[^Get](InChI=[0-9BCOHNSOPrIFla+\-\(\)\\\/,pqbtmsih]{6,})", re.IGNORECASE
 )
 smiles_search = re.compile(
-    '<h3>Smiles</h3>\s*(\S*)<br>\s*<button type="button" id="downloadSmiles">'
+    r'<h3>Smiles</h3>\s*(\S*)<br>\s*<button type="button" id="downloadSmiles">'
 )
 
-CAS_search = re.compile("(?<=[CAS\ Regeistry\ Number])(\d{1,7}\-\d{2}\-\d{1})")
+CAS_search = re.compile(r"(?<=[CAS\ Registry\ Number])(\d{1,7}\-\d{2}\-\d{1})")
 
 
 def get_smiles_from_name(name):
