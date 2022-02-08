@@ -1,0 +1,90 @@
+body {
+  font-size: 16px;
+  display: grid;
+  margin-bottom: 0;
+  min-height: 100vh;
+  display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
+  display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+  display: -ms-flexbox;      /* TWEENER - IE 10 */
+  display: -webkit-flex;     /* NEW - Chrome */
+  display: flex;             /* NEW, Spec - Opera 12.1, Firefox 20+ */
+  flex-direction: column;
+  -webkit-flex-direction: column;
+  justify-content: space-between;
+  }
+
+.fragment.media:first-child {
+  margin-top: 15px;
+  }
+
+  
+#frags svg {
+  overflow: visible;
+  }
+
+#drawing > svg {
+  overflow: visible;
+  margin: auto;
+  display: block;
+  }
+  
+@media (min-width: 1200px) {
+  .container {
+    max-width: 970px;
+  }}
+
+@media (max-width: 768px) {
+  #footer-block {
+    display: -webkit-flex;
+  }
+}
+
+html {
+  position: relative;
+}
+
+body {
+  margin-bottom: 0;
+  min-height: 100vh;
+}
+
+.footer {
+  font-color: 	#A9A9A9;
+  position: absolute;
+  bottom: 0;
+  /* Set the fixed height of the footer here */
+  width: 100%;
+  background-color: #f5f5f5;
+}
+
+.footer p {
+  margin: 10px;
+  }￼￼
+  ￼CANCEL
+  ￼OK
+  
+
+#bde_reg {
+  text-align: center;
+  font-size: 20px;
+  }
+
+#smiles-input {
+  margin-top: 5em;
+  display: flex;
+  }
+
+.btn {
+  margin-left: 10px;
+  }
+
+#ysi_reg p {
+  text-align: center;
+  font-size: 20px;
+  }
+
+#ysi_reg p span.label {
+  font-size: 100%;
+  }
+
+  
