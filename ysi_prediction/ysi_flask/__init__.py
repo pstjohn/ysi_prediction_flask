@@ -1,13 +1,15 @@
+import logging
 import os
 import urllib.parse
 from typing import Optional
 
-from fastapi import FastAPI, Path, Request
+from fastapi import Depends, FastAPI, HTTPException, Path, Request, Response
 from fastapi.middleware.wsgi import WSGIMiddleware
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from flask import Flask, Markup, flash, render_template, request
 from pydantic import BaseModel
-from wtforms import Form, TextField, validators
+from wtforms import Form, StringField, validators
 
 # App config.
 DEBUG = True
@@ -20,9 +22,12 @@ from ysi_flask.fragdecomp.fragment_decomposition import (
     draw_mol_svg, FragmentError, draw_fragment)
 from ysi_flask.fragdecomp.chemical_conversions import canonicalize_smiles
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 
 class ReusableForm(Form):
-    name = TextField('SMILES:', validators=[validators.required()])
+    name = StringField('SMILES:', validators=[validators.InputRequired()])
 
 
 def quote(x):
@@ -119,6 +124,33 @@ class Prediction(BaseModel):
     status: str
 
 
+class Result(BaseModel):
+    mean: Optional[float] = None
+    std: Optional[float] = None
+    outlier: Optional[bool] = None
+    exp_mean: Optional[float] = None
+    exp_std: Optional[float] = None
+    exp_name: Optional[str] = None
+    status: str
+    mol_svg: Optional[str] = None
+    svg: Optional[str] = None
+    frag_df: Optional[dict] = None
+    frag_missing_df: Optional[dict] = None
+    named_smiles: Optional[str] = None
+
+
+class Frag(BaseModel):
+    frag_str: Optional[str] = None
+    frag_svg: Optional[str] = None
+    fragrow: Optional[dict] = None
+    matches: Optional[dict] = None
+    status: str
+
+
+class Message(BaseModel):
+    message: str
+
+
 description = """This tool predicts the Yield Sooting Index of a compound
 as a function of its carbon types. To use, enter a SMILES string above (or
 use the drawing tool) and press submit. Experimental measurements, when
@@ -148,24 +180,25 @@ apiapp = FastAPI(
 smiles_path = Path(..., title="Enter a SMILES string", example="CC1=CC(=CC(=C1)O)C")
 
 
-@apiapp.get("/predict/{smiles}", response_model=Prediction, tags=["predict"])
-async def api(api_request: Request, smiles: str = smiles_path):
-    # if smiles is None and 'smiles' in api_request.args:
-    #     smiles = urllib.parse.unquote(api_request.args['smiles'])
-
+@apiapp.get("/canonicalize/{smiles:path}", responses={400: {"model": Message}})
+async def canonicalize(smiles: str):
     try:
         can_smiles = canonicalize_smiles(smiles)
-        if not can_smiles:
-            raise RuntimeError
+        if can_smiles is None:
+            raise Exception()
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid smiles: %s" % smiles)
+    return can_smiles
 
-    except RuntimeError:
-        return {'status': 'invalid smiles'}
 
+@apiapp.get("/predict/{smiles:path}", response_model=Prediction, tags=["predict"])
+async def api_predict(
+    smiles: str = Depends(canonicalize)
+):
     try:
-        mean, std, outlier, frag_df, exp_mean, exp_std, exp_name = predict(can_smiles)
-    except ValueError:
-        return {'status': 'prediction error'}
-
+        mean, std, outlier, frag_df, exp_mean, exp_std, exp_name = predict(smiles)
+    except ValueError as ve:
+        raise HTTPException(status_code=400, detail=str(ve))
     return {
         'mean': mean,
         'std': std,
@@ -177,7 +210,93 @@ async def api(api_request: Request, smiles: str = smiles_path):
     }
 
 
+@apiapp.get("/result/{smiles:path}", response_model=Result, tags=["result"])
+async def api_result(
+    smiles: str = Depends(canonicalize),
+):
+    try:
+        # Here's the real prediction step. We calculated the predicted mean +/-
+        # std, draw the whole molecule, and return a dataframe of the component
+        # fragments.
+        mean, std, outlier, frag_df, exp_mean, exp_std, exp_name = predict(smiles)
+        mol_svg = draw_mol_svg(smiles, figsize=(150, 150),
+                               color_dict=dict(zip(frag_df.index, frag_df.color)))
+        mean = round(mean, 1)
+        std = round(std, 1)
+        frag_df['frag_link'] = frag_df.index
+        frag_df['frag_link'] = frag_df['frag_link'].apply(quote)
+        if exp_name:
+            smiles += ' ({})'.format(exp_name)
+        return Result(mol_svg=mol_svg,
+                      mean=mean,
+                      std=std,
+                      frag_df=frag_df[frag_df['train_count'] > 0].to_dict(),
+                      outlier=outlier,
+                      exp_mean=exp_mean,
+                      exp_std=exp_std,
+                      frag_missing_df=frag_df[frag_df['train_count'] == 0].to_dict(),
+                      named_smiles=smiles,
+                      status='ok',
+                      )
+    except FragmentError:
+        # Most likely a poorly-formed SMILES string.
+        errmsg = ('Error: "{}" SMILES string invalid. Please enter a valid SMILES '
+                  'without quotes.'.format(smiles))
+        raise HTTPException(status_code=400, detail=errmsg)
+    except Exception as ex:
+        # Most likely a poorly-formed SMILES string.
+        if 'c' not in smiles.lower():
+            errmsg = ('Error: Input SMILES "{}" must contain a carbon '
+                      'atom.'.format(smiles))
+            raise HTTPException(status_code=400, detail=errmsg)
+        errmsg = ('Error: Exception occurred with input '
+                  '{0}: {1}'.format(smiles, ex))
+        raise HTTPException(status_code=400, detail=errmsg)
+
+
+@apiapp.get("/frag/{frag_str:path}", response_model=Frag, tags=["frag"])
+async def api_frag(
+    frag_str: str,
+):
+    color = (0.9677975592919913, 0.44127456009157356, 0.5358103155058701)
+    frag_svg = Markup(draw_fragment(frag_str, color))
+    fragment_row, matches = return_fragment_matches(frag_str)
+    matches['smiles_link'] = matches.SMILES.apply(quote)
+    # Some of the Type and CAS fields return NAN, which breaks json
+    md = matches.fillna('').to_dict()
+    return Frag(frag_str=frag_str,
+                frag_svg=frag_svg,
+                fragrow=fragment_row.to_dict(),
+                matches=md,
+                status='ok',
+                )
+
+# @apiapp.get(
+#     "/draw/{smiles:path}",
+#     response_class=Response,
+#     responses={200: {"content": {"image/svg+xml": {}}}},
+# )
+# async def draw(
+#     smiles: str = Depends(canonicalize),
+# ):
+#     logger.error("Bond index is %s", bond_index)
+#     if bond_index is not None:
+#         try:
+#             svg = draw_bde(smiles, bond_index)
+#         except RuntimeError as ex:
+#             raise HTTPException(status_code=400, detail=str(ex))
+#     else:
+#         is_outlier, missing_atom, missing_bond = validate_inputs(dict(features))
+#         if not is_outlier:
+#             svg = draw_mol(smiles)
+#         else:
+#             svg = draw_mol_outlier(smiles, missing_atom, missing_bond)
+#     return Response(content=svg, media_type="image/svg+xml")
+
 script_dir = os.path.dirname(__file__)
+apiapp.add_middleware(
+    CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"]
+)
 apiapp.mount("/client", StaticFiles(directory=os.path.join(script_dir, "static/client")), name="client")
 apiapp.mount("/static", StaticFiles(directory=os.path.join(script_dir, "static")), name="static")
 apiapp.mount("/", WSGIMiddleware(flask_app))
