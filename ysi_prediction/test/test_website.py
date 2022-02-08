@@ -46,7 +46,7 @@ def test_api(client):
     # assert data['status'] == 'ok'
 
     data = fastapi_client.get('/predict/CB').json()
-    assert data['outlier'] == True
+    assert data['outlier'] is True
 
     data = fastapi_client.get('/predict/X').json()
-    assert data['status'] == 'invalid smiles'
+    assert data['detail'] == "Invalid smiles: X"
