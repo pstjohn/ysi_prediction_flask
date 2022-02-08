@@ -5,9 +5,7 @@ import pandas as pd
 from rdkit import Chem
 from rdkit.Chem import rdDepictor
 from rdkit.Chem.Draw import rdMolDraw2D
-
 from ysi_flask.fragdecomp.chemical_conversions import canonicalize_smiles
-
 
 # from IPython.display import SVG
 
@@ -27,9 +25,11 @@ def get_fragments(smiles):
     try:
         mol = Chem.MolFromSmiles(canonicalize_smiles(smiles, isomeric=False))
         mol = Chem.AddHs(mol)  # This seems important to get just the next C
-        return pd.Series(Counter((
-            get_environment_smarts(carbon, mol)
-            for carbon in iter_carbons(mol))))
+        return pd.Series(
+            Counter(
+                (get_environment_smarts(carbon, mol) for carbon in iter_carbons(mol))
+            )
+        )
 
     except Exception:
         # Deal with wierd rdkit errors
@@ -43,7 +43,7 @@ def iter_carbons(mol):
 
     """
     for a in mol.GetAtoms():
-        if a.GetSymbol() == 'C':
+        if a.GetSymbol() == "C":
             yield a
 
         # elif a.GetSymbol() is 'O':
@@ -63,13 +63,14 @@ def get_environment_smarts(carbon, mol):
         The molecule the atom is present in
 
     """
-    bond_list = list(Chem.FindAtomEnvironmentOfRadiusN(
-        mol, 1, carbon.GetIdx(), useHs=True))
+    bond_list = list(
+        Chem.FindAtomEnvironmentOfRadiusN(mol, 1, carbon.GetIdx(), useHs=True)
+    )
 
     bond_smarts = bond_list_to_smarts(mol, bond_list)
 
     if carbon.IsInRing():
-        return bond_smarts + ' | (Ring)'
+        return bond_smarts + " | (Ring)"
     else:
         return bond_smarts
 
@@ -87,8 +88,9 @@ def bond_list_to_smarts(mol, bond_list):
     for bidx in bond_list:
         atoms.add(mol.GetBondWithIdx(bidx).GetBeginAtomIdx())
         atoms.add(mol.GetBondWithIdx(bidx).GetEndAtomIdx())
-    return Chem.MolFragmentToSmiles(mol, atoms, canonical=True,
-                                    allBondsExplicit=True, allHsExplicit=True)
+    return Chem.MolFragmentToSmiles(
+        mol, atoms, canonical=True, allBondsExplicit=True, allHsExplicit=True
+    )
 
 
 def label_fragments(smiles):
@@ -141,13 +143,15 @@ def draw_mol_svg(mol_str, color_dict=None, figsize=(300, 300), smiles=True):
         matches = label_fragments(mol_str)
 
         highlight_colors_dict = pd.DataFrame(matches).merge(
-            pd.DataFrame(pd.Series(color_dict)), left_on=0,
-            right_index=True)['0_y']
+            pd.DataFrame(pd.Series(color_dict)), left_on=0, right_index=True
+        )["0_y"]
 
         drawer.DrawMolecule(
-            mc, highlightAtoms=tuple(highlight_colors_dict.index),
+            mc,
+            highlightAtoms=tuple(highlight_colors_dict.index),
             highlightAtomColors=highlight_colors_dict.to_dict(),
-            highlightBonds=False)
+            highlightBonds=False,
+        )
 
     else:
         drawer.DrawMolecule(mc)
@@ -155,7 +159,7 @@ def draw_mol_svg(mol_str, color_dict=None, figsize=(300, 300), smiles=True):
     drawer.FinishDrawing()
     svg = drawer.GetDrawingText()
 
-    svg = svg.replace('svg:', '').replace(':svg', '')
+    svg = svg.replace("svg:", "").replace(":svg", "")
     return svg
 
 
@@ -171,31 +175,37 @@ def flatten(l, ltypes=(list, tuple)):
                 i -= 1
                 break
             else:
-                l[i:i + 1] = l[i]
+                l[i : i + 1] = l[i]
         i += 1
     return ltype(l)
 
 
 def draw_fragment(fragment_name, color):
-    mol = Chem.MolFromSmarts(re.sub(' \|.*$', '', fragment_name))
+    mol = Chem.MolFromSmarts(re.sub(" \|.*$", "", fragment_name))
     mc = Chem.Mol(mol.ToBinary())
     rdDepictor.Compute2DCoords(mc)
 
     drawer = rdMolDraw2D.MolDraw2DSVG(80, 80)
 
-    center = int(pd.Series({atom.GetIdx(): len(atom.GetNeighbors()) for atom in
-                            mol.GetAtoms()}).idxmax())
+    center = int(
+        pd.Series(
+            {atom.GetIdx(): len(atom.GetNeighbors()) for atom in mol.GetAtoms()}
+        ).idxmax()
+    )
 
     to_highlight = [center]
     radius_dict = {center: 0.5}
     color_dict = {center: color}
 
-    drawer.DrawMolecule(mc, highlightAtoms=to_highlight,
-                        highlightAtomColors=color_dict,
-                        highlightAtomRadii=radius_dict,
-                        highlightBonds=False)
+    drawer.DrawMolecule(
+        mc,
+        highlightAtoms=to_highlight,
+        highlightAtomColors=color_dict,
+        highlightAtomRadii=radius_dict,
+        highlightBonds=False,
+    )
 
     drawer.FinishDrawing()
     svg = drawer.GetDrawingText()
 
-    return svg.replace('svg:', '').replace(':svg', '')
+    return svg.replace("svg:", "").replace(":svg", "")

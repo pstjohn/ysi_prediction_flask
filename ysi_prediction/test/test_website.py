@@ -1,7 +1,5 @@
 import pytest
-from fastapi.testclient import TestClient
-
-from ysi_flask import flask_app, app
+from ysi_flask import flask_app
 
 
 @pytest.fixture
@@ -11,42 +9,25 @@ def client():
 
 
 def test_index(client):
-    rv = client.get('/')
-    assert b'Yield Sooting Index (YSI)' in rv.data
+    rv = client.get("/")
+    assert b"Yield Sooting Index (YSI)" in rv.data
 
 
 def test_result(client):
-    rv = client.get('/result?name=c1ccccc1')
-    assert b'Component Fragments' in rv.data
+    rv = client.get("/result?name=c1ccccc1")
+    assert b"Component Fragments" in rv.data
 
 
 def test_neighbors(client):
-    rv = client.get('frag?name=%5BH%5D-%5BC%5D%28-%5BH%5D%29%28-%5BH%5D%29-%5BC%5D')
-    assert b'Containing Molecules' in rv.data
+    rv = client.get("frag?name=%5BH%5D-%5BC%5D%28-%5BH%5D%29%28-%5BH%5D%29-%5BC%5D")
+    assert b"Containing Molecules" in rv.data
 
 
 def test_out_of_scope(client):
-    rv = client.get('/result?name=BrC1CCCC1')
-    assert b'Missing Fragments' in rv.data
+    rv = client.get("/result?name=BrC1CCCC1")
+    assert b"Missing Fragments" in rv.data
 
 
 def test_invalid(client):
     rv = client.get('/result?name=')
     assert b'Please enter a valid SMILES without quotes' in rv.data
-
-
-fastapi_client = TestClient(app)
-
-
-def test_api(client):
-    data = fastapi_client.get('/predict/CCO').json()
-    assert data['status'] == 'ok'
-
-    # data = fastapi_client.get('/predict?smiles=C%2FC%3DC%2FC').json()
-    # assert data['status'] == 'ok'
-
-    data = fastapi_client.get('/predict/CB').json()
-    assert data['outlier'] is True
-
-    data = fastapi_client.get('/predict/X').json()
-    assert data['detail'] == "Invalid smiles: X"

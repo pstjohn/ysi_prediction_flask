@@ -3,7 +3,7 @@ from sklearn.base import BaseEstimator, ClassifierMixin
 
 
 class NullspaceClassifier(BaseEstimator, ClassifierMixin):
-    def __init__(self, tol=1E-8):
+    def __init__(self, tol=1e-8):
         self.tol = tol
 
     def fit(self, X, y=None):
@@ -11,4 +11,4 @@ class NullspaceClassifier(BaseEstimator, ClassifierMixin):
         self.rank = (self.s > self.tol).sum()
 
     def predict(self, X):
-        return np.abs(self.v[self.rank:] @ np.asarray(X).T).sum(0) > self.tol
+        return np.abs(self.v[self.rank :] @ np.asarray(X).T).sum(0) > self.tol
