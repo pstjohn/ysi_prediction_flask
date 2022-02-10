@@ -29,10 +29,10 @@ const result = Vue.component('result', {
     <div v-if="frag_missing_df.count" class='container'>
       <div id='frags' class="row">
       	<div v-for="key in Object.keys(frag_missing_df.count)" class="col-sm-6 col-md-6 media fragment border-1 rounded">
-      		<div class='media-left' v-html="frag_missing_df[key].svg"></div>
+      		<div class='media-left' v-html="frag_missing_df.svg[key]"></div>
       		<div class="media-body">
       			<h4 class='media-heading'>{{ key }}</h4>
-      			<p><strong>Count:</strong> {{ frag_missing_df[key].count }}<br/>
+      			<p><strong>Count:</strong> {{ frag_missing_df.count[key] }}<br/>
       		</div>
       	</div>
       </div>
