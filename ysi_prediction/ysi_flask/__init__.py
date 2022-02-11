@@ -302,11 +302,14 @@ async def api_frag(
     frag_str: str,
 ):
     color = (0.9677975592919913, 0.44127456009157356, 0.5358103155058701)
-    frag_svg = Markup(draw_fragment(frag_str, color))
     try:
+        frag_svg = Markup(draw_fragment(frag_str, color))
         fragment_row, matches = return_fragment_matches(frag_str)
     except KeyError:
         errmsg = ('Fragment "{}" not found'.format(frag_str))
+        raise HTTPException(status_code=400, detail=errmsg)
+    except AttributeError as ae:
+        errmsg = "AttributeError: " + str(ae)
         raise HTTPException(status_code=400, detail=errmsg)
     matches['smiles_link'] = matches.SMILES.apply(quote)
     # Some of the Type and CAS fields return NAN, which breaks json
