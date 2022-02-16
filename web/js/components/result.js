@@ -1,8 +1,8 @@
 const result = Vue.component('result', {
-  props: ['smiles', 'smiles_error'],
+  props: ['smiles', 'api_error'],
   template: `
 <div class='container'>
-  <div class="alert alert-warning" v-if="smiles_error">{{smiles_error}}</div>
+  <div class="alert alert-warning" v-if="api_error">{{api_error}}</div>
   <div v-else class='container'>
     <h2>{{ named_smiles }}</h2>
     <div id='drawing' v-html="mol_svg"></div>
@@ -79,16 +79,18 @@ const result = Vue.component('result', {
   },
   methods: {
     async get_data(){
-      var res_component = this;
       axios.get(api_server + '/result/' +  encodeURIComponent(this.$route.params.smiles))
       .then(response => {
           // console.log(response);
-          Object.assign(res_component, response.data);
-          res_component.smiles_error = "";
+          Object.assign(this, response.data);
+          this.api_error = "";
       })
       .catch(err => {
-        //console.log(err.response);
-        res_component.smiles_error = err.response.data['detail'];
+        if (err.response) {
+          this.api_error = err.response.data['detail'];
+        } else {
+          this.api_error = "Unable to contact API server at " + api_server;
+        }
       });
     }
   },

@@ -146,47 +146,6 @@
 		<!-- Vue controller -->
 		<script type="text/javascript" language="javascript" src="js/app.js"></script>
 	</div>
-	<!-- End content -->
-	<!-- jsmewindow connected to the draw link by data-target -->
-	<div class="modal fade" id="jsmewindow">
-		<div class="modal-dialog modal-dialog-centered modal-lg">
-			<div class="modal-content">
-				<div id="jsme_container" class="modal-body" style="height:430px;">
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-					<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="saveSmiles()">OK</button>
-	</div>
-</div>
-</div>
-</div>
-	<script>
-
-		$('#jsmewindow').on('shown.bs.modal', function (e) {
-			jsmeApplet.setWidth($("#jsme_container").width() + "px");
-		});
-
-		window.onresize = e => { jsmeApplet.setWidth($("#jsme_container").width() + "px") };
-
-		//this function will be called after the JavaScriptApplet code has been loaded.
-		function jsmeOnLoad() {
-			jsmeApplet = new JSApplet.JSME("jsme_container", "768px", "400px");
-		}
-		//set the smile string of molecule drawing in the jsme window to the text
-		function saveSmiles() {
-				var smiles = jsmeApplet.smiles();
-				// Trigger the input to enable submit button
-				$("#name").val(smiles).trigger("input");
-		}
-		function drawfromSmiles(input) {
-				var smiles = document.getElementById(input).value;
-				if(smiles) {
-						jsmeApplet.readGenericMolecularInput(smiles);
-				}else {
-						jsmeApplet.reset();
-				}
-		}
-	</script>
 
 	<!-- == APPLICATION FOOTER | updated 3/2021 == -->
 	<!--stopindex-->

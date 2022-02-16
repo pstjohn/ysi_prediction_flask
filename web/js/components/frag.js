@@ -47,12 +47,15 @@ const frag = Vue.component('frag', {
       axios.get(api_server + '/frag/' +  encodeURIComponent(this.$route.params.frag_str))
       .then(response => {
           // console.log(response);
-          Object.assign(res_component, response.data);
-          res_component.api_error = "";
+          Object.assign(this, response.data);
+          this.api_error = "";
       })
       .catch(err => {
-        //console.log(err.response);
-        res_component.api_error = err.response.data['detail'];
+        if (err.response) {
+          this.api_error = err.response.data['detail'];
+        } else {
+          this.api_error = "Unable to contact API server at " + api_server;
+        }
       });
     }
   },

@@ -16,6 +16,16 @@ const app = new Vue({
   router
 }).$mount('#app');
 
+// Need a global jsmeApplet
+function jsmeOnLoad() {
+  jsmeApplet = new JSApplet.JSME("jsme_container", "768px", "400px");
+}
+// Window resizing needs to trigger applet resizing
+$('#jsmewindow').on('shown.bs.modal', function (e) {
+  jsmeApplet.setWidth($("#jsme_container").width() + "px");
+});
+window.onresize = e => { jsmeApplet.setWidth($("#jsme_container").width() + "px") };
+
 // Calls to api server with standard error handling
 // function call_api_server( urlpath ) {
 //   $('#smiles-error').hide();
