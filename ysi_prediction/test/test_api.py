@@ -14,7 +14,7 @@ def test_path_api():
     assert data["outlier"] is True
 
     data = fastapi_client.get("/predict/X").json()
-    assert data["status"] == "invalid smiles"
+    assert data['detail'] == "Invalid smiles: X"
 
 
 def test_query_api():

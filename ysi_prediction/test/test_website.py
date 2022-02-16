@@ -29,5 +29,5 @@ def test_out_of_scope(client):
 
 
 def test_invalid(client):
-    rv = client.get("/result?name=")
-    assert b"Please enter a valid SMILES without quotes" in rv.data
+    rv = client.get('/result?name=')
+    assert b'Please enter a valid SMILES without quotes' in rv.data

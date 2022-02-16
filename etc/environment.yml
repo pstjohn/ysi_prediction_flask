@@ -18,6 +18,3 @@ dependencies:
   - wtforms
   - pytest
   - requests
-  - websockets
-  - httptools
-  - uvloop
